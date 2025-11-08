@@ -1,0 +1,553 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>债券基金评估报告 (Top 20 精选)</title>
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #F5F7FA;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            color: #165DFF;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        h2 {
+            text-align: center;
+            color: #165DFF; /* 蓝色分割线 */
+            font-size: 1.5em; 
+            margin-top: 35px; 
+            border-bottom: 2px solid #165DFF; 
+            padding-bottom: 8px; 
+            display: block;
+            width: 100%;
+            font-weight: 500;
+        } 
+        table { 
+            width: 95%;
+            max-width: 1200px;
+            margin: 30px auto; 
+            border-collapse: collapse; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background-color: white;
+            border-radius: 6px; /* 适度圆角 */
+            overflow: hidden;
+        }
+        th, td { 
+            padding: 14px 12px; 
+            text-align: center; 
+            border-bottom: 1px solid #E5E9F2;
+        }
+        th { 
+            background-color: #165DFF; /* 商务蓝表头 */
+            color: white; 
+            font-weight: 600;
+            font-size: 1em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        /* 斑马纹效果 */
+        tr:nth-child(even) {
+            background-color: #F5F7FA;
+        }
+        tr:hover {
+            background-color: #E6F7FF;
+            box-shadow: 0 2px 4px rgba(22, 93, 255, 0.1);
+        }
+        /* 前三名柔和背景色 */
+        .rank-1 {
+            background-color: #E6F7FF !important;
+        }
+        .rank-2 {
+            background-color: #F0F9FF !important;
+        }
+        .rank-3 {
+            background-color: #F5F0FF !important;
+        }
+        .rank-1 td:first-child, .rank-2 td:first-child, .rank-3 td:first-child {
+            background-color: #165DFF;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .rve-cell {
+            font-weight: bold;
+            color: #165DFF; /* 商务蓝突出 RVE */
+            font-size: 1.05em;
+        }
+        
+        /* 正收益绿色显示 */
+        .positive-return {
+            color: #52C41A;
+        }
+        
+        /* 评价体系说明区 - 卡片式设计 */
+        .explanation-container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 40px auto;
+            text-align: left;
+            padding: 30px;
+            background-color: #FFFFFF;
+            border: 1px solid #E5E9F2;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            line-height: 1.7;
+        }
+        .explanation-container h3 {
+            color: #165DFF;
+            border-bottom: 1px solid #E5E9F2;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .metric-definition {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #F5F7FA;
+            border-radius: 4px;
+        }
+        .metric-definition strong {
+            color: #165DFF; /* 商务蓝突出关键指标 */
+            font-weight: 600;
+        }
+        .math-formula {
+            background-color: #F0F9FF;
+            padding: 15px;
+            border-left: 4px solid #165DFF;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05em;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+            table {
+                width: 100%;
+                font-size: 0.9em;
+            }
+            th, td {
+                padding: 8px 6px;
+            }
+            .explanation-container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+    <script>
+        // 等待DOM加载完成
+        document.addEventListener("DOMContentLoaded", function() {
+            // 获取checkbox元素
+            var filterCheckbox = document.getElementById("filterFixedTerm");
+            
+            // 执行过滤函数
+            function performFiltering() {
+                // 获取所有表格行
+                var rows = document.querySelectorAll("table tbody tr");
+                
+                for(var i = 0; i < rows.length; i++) {
+                    var row = rows[i];
+                    // 获取基金名称单元格
+                    var fundNameCell = row.querySelector("td:nth-child(3)");
+                    if (fundNameCell) {
+                        var fundName = fundNameCell.textContent;
+                        // 检查基金名称是否包含"持有"字
+                        var containsDayTerm = fundName.indexOf("持有") !== -1;
+                        
+                        // 根据checkbox状态和基金名称过滤显示
+                        if (filterCheckbox.checked && containsDayTerm) {
+                            row.style.display = "none";
+                        } else {
+                            row.style.display = "";
+                        }
+                    }
+                }
+            }
+            
+            // 页面加载时立即执行一次过滤
+            performFiltering();
+            
+            // 当checkbox状态改变时执行过滤
+            filterCheckbox.addEventListener("change", performFiltering);
+        });
+    </script>
+</head>
+<body>
+    <h1>债券基金评估报告 (Top 20 精选)</h1>
+    <h2>基金评价结果</h2>
+    
+    <div style="margin: 20px auto; width: 95%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 16px; color: #666;">
+            【更新时间】: 2025-11-08 21:55:04
+        </div>
+        <label style="font-size: 16px; cursor: pointer;">
+            <input type="checkbox" id="filterFixedTerm" style="margin-right: 8px;" checked>
+            隐藏固定期限短债
+        </label>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>排名</th>
+                <th>基金代码</th>
+                <th>基金名称</th>
+                <th>标准差</th>
+                <th>简化夏普</th>
+                <th>近1个月</th>
+                <th>近3个月</th>
+                <th>近6个月</th>
+                <th>近1年</th>
+                <th>近3年</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr class="rank-1">
+                <td>1</td>
+                <td>015426</td>
+                <td style="text-align: left;" data-fund-name="东吴月月享30天持有短债A">东吴月月享30天持有短债A</td>
+                <td class="std-dev-cell">0.0062</td>
+                <td class="sharpe-cell">5.1790</td>
+                <td><span class="positive-return">0.28%</span></td>
+                <td><span class="positive-return">0.47%</span></td>
+                <td><span class="positive-return">1.17%</span></td>
+                <td><span class="positive-return">3.20%</span></td>
+                <td><span class="positive-return">9.13%</span></td>
+            </tr>
+        
+
+            <tr class="rank-2">
+                <td>2</td>
+                <td>013790</td>
+                <td style="text-align: left;" data-fund-name="大成稳安60天滚动持有债券A">大成稳安60天滚动持有债券A</td>
+                <td class="std-dev-cell">0.0107</td>
+                <td class="sharpe-cell">3.5194</td>
+                <td><span class="positive-return">0.38%</span></td>
+                <td><span class="positive-return">0.43%</span></td>
+                <td><span class="positive-return">1.81%</span></td>
+                <td><span class="positive-return">3.75%</span></td>
+                <td><span class="positive-return">10.15%</span></td>
+            </tr>
+        
+
+            <tr class="rank-3">
+                <td>3</td>
+                <td>010577</td>
+                <td style="text-align: left;" data-fund-name="汇安永福90天持有中短债A">汇安永福90天持有中短债A</td>
+                <td class="std-dev-cell">0.0087</td>
+                <td class="sharpe-cell">3.5125</td>
+                <td><span class="positive-return">0.33%</span></td>
+                <td><span class="positive-return">0.46%</span></td>
+                <td><span class="positive-return">1.02%</span></td>
+                <td><span class="positive-return">3.06%</span></td>
+                <td><span class="positive-return">8.42%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>4</td>
+                <td>013792</td>
+                <td style="text-align: left;" data-fund-name="大成稳安60天滚动持有债券E">大成稳安60天滚动持有债券E</td>
+                <td class="std-dev-cell">0.0107</td>
+                <td class="sharpe-cell">3.4207</td>
+                <td><span class="positive-return">0.37%</span></td>
+                <td><span class="positive-return">0.40%</span></td>
+                <td><span class="positive-return">1.76%</span></td>
+                <td><span class="positive-return">3.65%</span></td>
+                <td><span class="positive-return">9.79%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>5</td>
+                <td>013791</td>
+                <td style="text-align: left;" data-fund-name="大成稳安60天滚动持有债券C">大成稳安60天滚动持有债券C</td>
+                <td class="std-dev-cell">0.0109</td>
+                <td class="sharpe-cell">3.2560</td>
+                <td><span class="positive-return">0.37%</span></td>
+                <td><span class="positive-return">0.38%</span></td>
+                <td><span class="positive-return">1.71%</span></td>
+                <td><span class="positive-return">3.54%</span></td>
+                <td><span class="positive-return">9.48%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>6</td>
+                <td>006932</td>
+                <td style="text-align: left;" data-fund-name="平安0-3年期政策性金融债债券A">平安0-3年期政策性金融债债券A</td>
+                <td class="std-dev-cell">0.0107</td>
+                <td class="sharpe-cell">3.0472</td>
+                <td><span class="positive-return">0.46%</span></td>
+                <td><span class="positive-return">1.40%</span></td>
+                <td><span class="positive-return">1.94%</span></td>
+                <td><span class="positive-return">3.27%</span></td>
+                <td><span class="positive-return">8.83%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>7</td>
+                <td>013351</td>
+                <td style="text-align: left;" data-fund-name="中加聚安60天滚动持有中短债发起式A">中加聚安60天滚动持有中短债发起式A</td>
+                <td class="std-dev-cell">0.0147</td>
+                <td class="sharpe-cell">2.8949</td>
+                <td><span class="positive-return">0.53%</span></td>
+                <td><span class="positive-return">0.64%</span></td>
+                <td><span class="positive-return">1.72%</span></td>
+                <td><span class="positive-return">4.26%</span></td>
+                <td><span class="positive-return">11.76%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>8</td>
+                <td>008448</td>
+                <td style="text-align: left;" data-fund-name="德邦短债A">德邦短债A</td>
+                <td class="std-dev-cell">0.0119</td>
+                <td class="sharpe-cell">2.8011</td>
+                <td><span class="positive-return">0.40%</span></td>
+                <td><span class="positive-return">0.49%</span></td>
+                <td><span class="positive-return">1.02%</span></td>
+                <td><span class="positive-return">3.34%</span></td>
+                <td><span class="positive-return">9.86%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>9</td>
+                <td>013352</td>
+                <td style="text-align: left;" data-fund-name="中加聚安60天滚动持有中短债发起式C">中加聚安60天滚动持有中短债发起式C</td>
+                <td class="std-dev-cell">0.0145</td>
+                <td class="sharpe-cell">2.7919</td>
+                <td><span class="positive-return">0.51%</span></td>
+                <td><span class="positive-return">0.59%</span></td>
+                <td><span class="positive-return">1.61%</span></td>
+                <td><span class="positive-return">4.06%</span></td>
+                <td><span class="positive-return">11.09%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>10</td>
+                <td>008505</td>
+                <td style="text-align: left;" data-fund-name="浙商中短债A">浙商中短债A</td>
+                <td class="std-dev-cell">0.0114</td>
+                <td class="sharpe-cell">2.7477</td>
+                <td><span class="positive-return">0.39%</span></td>
+                <td><span class="positive-return">0.46%</span></td>
+                <td><span class="positive-return">1.09%</span></td>
+                <td><span class="positive-return">3.12%</span></td>
+                <td><span class="positive-return">12.11%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>11</td>
+                <td>015489</td>
+                <td style="text-align: left;" data-fund-name="申万菱信稳鑫30天滚动持有短债债券A">申万菱信稳鑫30天滚动持有短债债券A</td>
+                <td class="std-dev-cell">0.0136</td>
+                <td class="sharpe-cell">2.6336</td>
+                <td><span class="positive-return">0.42%</span></td>
+                <td><span class="positive-return">0.41%</span></td>
+                <td><span class="positive-return">1.08%</span></td>
+                <td><span class="positive-return">3.59%</span></td>
+                <td><span class="positive-return">6.26%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>12</td>
+                <td>008449</td>
+                <td style="text-align: left;" data-fund-name="德邦短债C">德邦短债C</td>
+                <td class="std-dev-cell">0.0120</td>
+                <td class="sharpe-cell">2.5551</td>
+                <td><span class="positive-return">0.38%</span></td>
+                <td><span class="positive-return">0.42%</span></td>
+                <td><span class="positive-return">0.89%</span></td>
+                <td><span class="positive-return">3.07%</span></td>
+                <td><span class="positive-return">9.02%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>13</td>
+                <td>014511</td>
+                <td style="text-align: left;" data-fund-name="英大安盈30天滚动持有债券发起式A">英大安盈30天滚动持有债券发起式A</td>
+                <td class="std-dev-cell">0.0166</td>
+                <td class="sharpe-cell">2.5229</td>
+                <td><span class="positive-return">0.40%</span></td>
+                <td><span class="positive-return">0.29%</span></td>
+                <td><span class="positive-return">0.68%</span></td>
+                <td><span class="positive-return">4.20%</span></td>
+                <td><span class="positive-return">14.83%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>14</td>
+                <td>015490</td>
+                <td style="text-align: left;" data-fund-name="申万菱信稳鑫30天滚动持有短债债券C">申万菱信稳鑫30天滚动持有短债债券C</td>
+                <td class="std-dev-cell">0.0138</td>
+                <td class="sharpe-cell">2.4615</td>
+                <td><span class="positive-return">0.41%</span></td>
+                <td><span class="positive-return">0.37%</span></td>
+                <td><span class="positive-return">0.99%</span></td>
+                <td><span class="positive-return">3.39%</span></td>
+                <td><span class="positive-return">5.61%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>15</td>
+                <td>014512</td>
+                <td style="text-align: left;" data-fund-name="英大安盈30天滚动持有债券发起式C">英大安盈30天滚动持有债券发起式C</td>
+                <td class="std-dev-cell">0.0164</td>
+                <td class="sharpe-cell">2.4361</td>
+                <td><span class="positive-return">0.38%</span></td>
+                <td><span class="positive-return">0.25%</span></td>
+                <td><span class="positive-return">0.58%</span></td>
+                <td><span class="positive-return">3.99%</span></td>
+                <td><span class="positive-return">14.21%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>16</td>
+                <td>014490</td>
+                <td style="text-align: left;" data-fund-name="浙商双月鑫60天滚动持有中短债A">浙商双月鑫60天滚动持有中短债A</td>
+                <td class="std-dev-cell">0.0163</td>
+                <td class="sharpe-cell">2.2491</td>
+                <td><span class="positive-return">0.43%</span></td>
+                <td><span class="positive-return">0.21%</span></td>
+                <td><span class="positive-return">1.20%</span></td>
+                <td><span class="positive-return">3.67%</span></td>
+                <td><span class="positive-return">10.69%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>17</td>
+                <td>014491</td>
+                <td style="text-align: left;" data-fund-name="浙商双月鑫60天滚动持有中短债C">浙商双月鑫60天滚动持有中短债C</td>
+                <td class="std-dev-cell">0.0160</td>
+                <td class="sharpe-cell">2.2272</td>
+                <td><span class="positive-return">0.42%</span></td>
+                <td><span class="positive-return">0.20%</span></td>
+                <td><span class="positive-return">1.15%</span></td>
+                <td><span class="positive-return">3.57%</span></td>
+                <td><span class="positive-return">10.35%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>18</td>
+                <td>014748</td>
+                <td style="text-align: left;" data-fund-name="西部利得季季稳90天滚动持有债券A">西部利得季季稳90天滚动持有债券A</td>
+                <td class="std-dev-cell">0.0181</td>
+                <td class="sharpe-cell">1.7095</td>
+                <td><span class="positive-return">0.54%</span></td>
+                <td><span class="positive-return">0.49%</span></td>
+                <td><span class="positive-return">1.37%</span></td>
+                <td><span class="positive-return">3.09%</span></td>
+                <td><span class="positive-return">9.83%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>19</td>
+                <td>007194</td>
+                <td style="text-align: left;" data-fund-name="长城短债A">长城短债A</td>
+                <td class="std-dev-cell">0.0249</td>
+                <td class="sharpe-cell">1.5640</td>
+                <td><span class="positive-return">0.66%</span></td>
+                <td><span class="positive-return">0.41%</span></td>
+                <td><span class="positive-return">1.35%</span></td>
+                <td><span class="positive-return">3.90%</span></td>
+                <td><span class="positive-return">11.32%</span></td>
+            </tr>
+        
+
+            <tr class="">
+                <td>20</td>
+                <td>007195</td>
+                <td style="text-align: left;" data-fund-name="长城短债C">长城短债C</td>
+                <td class="std-dev-cell">0.0251</td>
+                <td class="sharpe-cell">1.4917</td>
+                <td><span class="positive-return">0.65%</span></td>
+                <td><span class="positive-return">0.37%</span></td>
+                <td><span class="positive-return">1.27%</span></td>
+                <td><span class="positive-return">3.74%</span></td>
+                <td><span class="positive-return">10.80%</span></td>
+            </tr>
+        
+        </tbody>
+    </table>
+    
+        <div class="explanation-container">
+        <h3>评价体系说明：短债基金最终评价方案 1.1</h3>
+        <p>本评价体系基于多维度收益率数据的年化处理和标准差计算，对短债基金进行风险收益综合评价。排序指标是<strong>简化夏普比率</strong>。</p>
+        
+        <div class="metric-definition">
+            <strong>第一步：硬性门槛筛选</strong>
+            <div class="math-formula">
+                条件A：3% < 近1年收益率 < 6%
+                条件B：近3年收益 > 0
+            </div>
+            <p>剔除所有不能满足A+B条件的基金。近3年收益>0实质是为了剔除发行时间不满足3年的新基金。</p>
+        </div>
+        
+        <div class="metric-definition">
+            <strong>第二步：收益率数据年化处理</strong>
+            <div class="math-formula">
+                年化收益率1M = (1 + R1m/100)^12 - 1
+                年化收益率3M = (1 + R3m/100)^4 - 1
+                年化收益率6M = (1 + R6m/100)^2 - 1
+                近1年收益率已年化，直接使用
+            </div>
+            <p>将不同期限的收益率统一转换为年化收益率，便于后续的风险评估。</p>
+        </div>
+        
+        <div class="metric-definition">
+            <strong>第三步：标准差计算与简化夏普比率</strong>
+            <div class="math-formula">
+                标准差 = std(年化收益率1M, 年化收益率3M, 年化收益率6M, 近1年收益率)
+                简化夏普比率 = 近1年收益率 / 标准差
+            </div>
+            <p>标准差反映基金的风险波动特征，简化夏普比率衡量单位风险获得的回报。数值越高代表风险调整后收益越好。</p>
+        </div>
+        
+        <div class="metric-definition">
+            <strong>排序规则</strong>
+            <ol>
+                <li><strong>简化夏普比率排序：</strong> 依据简化夏普比率降序排序</li>
+                <li><strong>风险控制：</strong> 标准差越小，风险控制能力越强</li>
+                <li><strong>收益稳定性：</strong> 多个期限的年化收益率数据确保评估的全面性</li>
+            </ol>
+        </div>
+    </div>
+
+</body>
+</html>
