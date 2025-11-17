@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>债券基金趋势平滑度评估报告 (Top 50 精选)</title>
+    <title>债券基金趋势平滑度评估报告 (Top 30 精选)</title>
     <meta name="robots" content="noindex, nofollow">
     <style>
         body {
@@ -81,9 +81,9 @@
             font-weight: bold;
         }
         
-        .smoothness-score-cell {
+        .overall-score-cell {
             font-weight: bold;
-            color: #165DFF; /* 商务蓝突出平滑度得分 */
+            color: #165DFF; /* 商务蓝突出综合得分 */
             font-size: 1.05em;
         }
         
@@ -209,7 +209,7 @@
                     // 获取基金名称单元格
                     var fundNameCell = row.querySelector("td:nth-child(3)");
                     // 获取基金规模单元格
-                    var fundScaleCell = row.querySelector("td:nth-child(12)");
+                    var fundScaleCell = row.querySelector("td:nth-child(13)")
                     
                     if (fundNameCell && fundScaleCell) {
                         var fundName = fundNameCell.textContent;
@@ -254,12 +254,12 @@
     </script>
 </head>
 <body>
-    <h1>债券基金趋势平滑度评估报告 (Top 50 精选)</h1>
+    <h1>债券基金趋势平滑度评估报告 (Top 30 精选)</h1>
     <h2>基金评价结果</h2>
     
     <div style="margin: 20px auto; width: 95%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center;">
         <div style="font-size: 16px; color: #666;">
-            【评估时间】: 2025-11-12 | 【更新时间】: 2025-11-16 | 【评估基金数】: 37
+            【评估时间】: 2025-11-12 | 【更新时间】: 2025-11-17 | 【评估基金数】: 38
         </div>
         <div style="display: flex; gap: 15px;">
             <label style="font-size: 16px; cursor: pointer;">
@@ -279,8 +279,9 @@
                 <th>排名</th>
                 <th>基金代码</th>
                 <th>基金名称</th>
-                <th>平滑度得分</th>
-                <th>加权变化率</th>
+                <th>综合得分</th>
+                <th>稳定性得分</th>
+                <th>收益得分</th>
                 <th>近1个月</th>
                 <th>近3个月</th>
                 <th>近6个月</th>
@@ -294,122 +295,11 @@
             
             <tr class="rank-1">
                 <td>1</td>
-                <td>006933</td>
-                <td style="text-align: left;" data-fund-name="平安0-3年期政策性金融债债券C">平安0-3年期政策性金融债债券C</td>
-                <td class="smoothness-score-cell">53.79</td>
-                <td>0.8592</td>
-                <td><span class="positive-return">0.45%</span></td>
-                <td><span class="positive-return">1.17%</span></td>
-                <td><span class="positive-return">1.72%</span></td>
-                <td><span class="positive-return">2.83%</span></td>
-                <td><span class="positive-return">9.17%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">0.30</td>
-            </tr>
-        
-
-            <tr class="rank-2">
-                <td>2</td>
-                <td>006932</td>
-                <td style="text-align: left;" data-fund-name="平安0-3年期政策性金融债债券A">平安0-3年期政策性金融债债券A</td>
-                <td class="smoothness-score-cell">53.54</td>
-                <td>0.8678</td>
-                <td><span class="positive-return">0.46%</span></td>
-                <td><span class="positive-return">1.19%</span></td>
-                <td><span class="positive-return">2.02%</span></td>
-                <td><span class="positive-return">3.19%</span></td>
-                <td><span class="positive-return">9.87%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">0.19</td>
-            </tr>
-        
-
-            <tr class="rank-3">
-                <td>3</td>
-                <td>013522</td>
-                <td style="text-align: left;" data-fund-name="华富吉丰60天滚动持有中短债A">华富吉丰60天滚动持有中短债A</td>
-                <td class="smoothness-score-cell">52.82</td>
-                <td>0.8931</td>
-                <td><span class="positive-return">0.50%</span></td>
-                <td><span class="positive-return">0.62%</span></td>
-                <td><span class="positive-return">1.24%</span></td>
-                <td><span class="positive-return">2.88%</span></td>
-                <td><span class="positive-return">9.39%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">2.79</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>4</td>
-                <td>014749</td>
-                <td style="text-align: left;" data-fund-name="西部利得季季稳90天滚动持有债券C">西部利得季季稳90天滚动持有债券C</td>
-                <td class="smoothness-score-cell">50.87</td>
-                <td>0.9658</td>
-                <td><span class="positive-return">0.46%</span></td>
-                <td><span class="positive-return">0.48%</span></td>
-                <td><span class="positive-return">1.14%</span></td>
-                <td><span class="positive-return">2.74%</span></td>
-                <td><span class="positive-return">9.37%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">3.28</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>5</td>
-                <td>014748</td>
-                <td style="text-align: left;" data-fund-name="西部利得季季稳90天滚动持有债券A">西部利得季季稳90天滚动持有债券A</td>
-                <td class="smoothness-score-cell">50.78</td>
-                <td>0.9695</td>
-                <td><span class="positive-return">0.47%</span></td>
-                <td><span class="positive-return">0.52%</span></td>
-                <td><span class="positive-return">1.25%</span></td>
-                <td><span class="positive-return">2.95%</span></td>
-                <td><span class="positive-return">10.03%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">10.30</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>6</td>
-                <td>013375</td>
-                <td style="text-align: left;" data-fund-name="平安元鑫120天滚动持有中短债A">平安元鑫120天滚动持有中短债A</td>
-                <td class="smoothness-score-cell">48.74</td>
-                <td>1.0519</td>
-                <td><span class="positive-return">0.39%</span></td>
-                <td><span class="positive-return">0.51%</span></td>
-                <td><span class="positive-return">1.09%</span></td>
-                <td><span class="positive-return">2.86%</span></td>
-                <td><span class="positive-return">10.39%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">7.36</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>7</td>
-                <td>013376</td>
-                <td style="text-align: left;" data-fund-name="平安元鑫120天滚动持有中短债C">平安元鑫120天滚动持有中短债C</td>
-                <td class="smoothness-score-cell">48.56</td>
-                <td>1.0593</td>
-                <td><span class="positive-return">0.37%</span></td>
-                <td><span class="positive-return">0.46%</span></td>
-                <td><span class="positive-return">0.99%</span></td>
-                <td><span class="positive-return">2.64%</span></td>
-                <td><span class="positive-return">9.74%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">3.34</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>8</td>
                 <td>013351</td>
                 <td style="text-align: left;" data-fund-name="中加聚安60天滚动持有中短债发起式A">中加聚安60天滚动持有中短债发起式A</td>
-                <td class="smoothness-score-cell">48.32</td>
-                <td>1.0697</td>
+                <td class="overall-score-cell">67.91</td>
+                <td>48.32</td>
+                <td>97.30</td>
                 <td><span class="positive-return">0.44%</span></td>
                 <td><span class="positive-return">0.66%</span></td>
                 <td><span class="positive-return">1.55%</span></td>
@@ -420,12 +310,13 @@
             </tr>
         
 
-            <tr class="">
-                <td>9</td>
+            <tr class="rank-2">
+                <td>2</td>
                 <td>013352</td>
                 <td style="text-align: left;" data-fund-name="中加聚安60天滚动持有中短债发起式C">中加聚安60天滚动持有中短债发起式C</td>
-                <td class="smoothness-score-cell">48.30</td>
-                <td>1.0705</td>
+                <td class="overall-score-cell">65.74</td>
+                <td>48.30</td>
+                <td>91.89</td>
                 <td><span class="positive-return">0.43%</span></td>
                 <td><span class="positive-return">0.61%</span></td>
                 <td><span class="positive-return">1.44%</span></td>
@@ -436,44 +327,13 @@
             </tr>
         
 
-            <tr class="">
-                <td>10</td>
-                <td>016149</td>
-                <td style="text-align: left;" data-fund-name="中银季季享90天滚动持有中短债债券发起A">中银季季享90天滚动持有中短债债券发起A</td>
-                <td class="smoothness-score-cell">46.83</td>
-                <td>1.1352</td>
-                <td><span class="positive-return">0.66%</span></td>
-                <td><span class="positive-return">0.56%</span></td>
-                <td><span class="positive-return">1.04%</span></td>
-                <td><span class="positive-return">3.25%</span></td>
-                <td><span class="positive-return">12.23%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">11.75</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>11</td>
-                <td>013718</td>
-                <td style="text-align: left;" data-fund-name="兴银稳益30天持有期债券A">兴银稳益30天持有期债券A</td>
-                <td class="smoothness-score-cell">46.11</td>
-                <td>1.1689</td>
-                <td><span class="positive-return">0.28%</span></td>
-                <td><span class="positive-return">0.57%</span></td>
-                <td><span class="positive-return">0.96%</span></td>
-                <td><span class="positive-return">2.76%</span></td>
-                <td><span class="positive-return">9.18%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">0.23</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>12</td>
+            <tr class="rank-3">
+                <td>3</td>
                 <td>007194</td>
                 <td style="text-align: left;" data-fund-name="长城短债A">长城短债A</td>
-                <td class="smoothness-score-cell">45.81</td>
-                <td>1.1828</td>
+                <td class="overall-score-cell">63.16</td>
+                <td>45.81</td>
+                <td>89.19</td>
                 <td><span class="positive-return">0.64%</span></td>
                 <td><span class="positive-return">0.50%</span></td>
                 <td><span class="positive-return">1.28%</span></td>
@@ -485,91 +345,12 @@
         
 
             <tr class="">
-                <td>13</td>
-                <td>016150</td>
-                <td style="text-align: left;" data-fund-name="中银季季享90天滚动持有中短债债券发起C">中银季季享90天滚动持有中短债债券发起C</td>
-                <td class="smoothness-score-cell">45.75</td>
-                <td>1.1856</td>
-                <td><span class="positive-return">0.64%</span></td>
-                <td><span class="positive-return">0.51%</span></td>
-                <td><span class="positive-return">0.93%</span></td>
-                <td><span class="positive-return">3.04%</span></td>
-                <td><span class="positive-return">11.56%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">5.60</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>14</td>
-                <td>014815</td>
-                <td style="text-align: left;" data-fund-name="财通资管鸿慧中短债发起A">财通资管鸿慧中短债发起A</td>
-                <td class="smoothness-score-cell">45.62</td>
-                <td>1.1921</td>
-                <td><span class="positive-return">0.29%</span></td>
-                <td><span class="positive-return">0.42%</span></td>
-                <td><span class="positive-return">0.85%</span></td>
-                <td><span class="positive-return">2.60%</span></td>
-                <td><span class="positive-return">9.67%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">2.50</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>15</td>
-                <td>014882</td>
-                <td style="text-align: left;" data-fund-name="鑫元悦享60天滚动持有中短债A">鑫元悦享60天滚动持有中短债A</td>
-                <td class="smoothness-score-cell">45.40</td>
-                <td>1.2028</td>
-                <td><span class="positive-return">0.24%</span></td>
-                <td><span class="positive-return">0.42%</span></td>
-                <td><span class="positive-return">1.04%</span></td>
-                <td><span class="positive-return">2.66%</span></td>
-                <td><span class="positive-return">10.02%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">6.83</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>16</td>
-                <td>013790</td>
-                <td style="text-align: left;" data-fund-name="大成稳安60天滚动持有债券A">大成稳安60天滚动持有债券A</td>
-                <td class="smoothness-score-cell">45.12</td>
-                <td>1.2164</td>
-                <td><span class="positive-return">0.32%</span></td>
-                <td><span class="positive-return">0.44%</span></td>
-                <td><span class="positive-return">1.70%</span></td>
-                <td><span class="positive-return">3.64%</span></td>
-                <td><span class="positive-return">10.32%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">8.31</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>17</td>
-                <td>013792</td>
-                <td style="text-align: left;" data-fund-name="大成稳安60天滚动持有债券E">大成稳安60天滚动持有债券E</td>
-                <td class="smoothness-score-cell">44.67</td>
-                <td>1.2385</td>
-                <td><span class="positive-return">0.31%</span></td>
-                <td><span class="positive-return">0.41%</span></td>
-                <td><span class="positive-return">1.65%</span></td>
-                <td><span class="positive-return">3.55%</span></td>
-                <td><span class="positive-return">9.96%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">1.78</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>18</td>
+                <td>4</td>
                 <td>007195</td>
                 <td style="text-align: left;" data-fund-name="长城短债C">长城短债C</td>
-                <td class="smoothness-score-cell">44.66</td>
-                <td>1.2391</td>
+                <td class="overall-score-cell">61.39</td>
+                <td>44.66</td>
+                <td>86.49</td>
                 <td><span class="positive-return">0.62%</span></td>
                 <td><span class="positive-return">0.45%</span></td>
                 <td><span class="positive-return">1.19%</span></td>
@@ -581,251 +362,46 @@
         
 
             <tr class="">
-                <td>19</td>
-                <td>008448</td>
-                <td style="text-align: left;" data-fund-name="德邦短债A">德邦短债A</td>
-                <td class="smoothness-score-cell">44.23</td>
-                <td>1.2610</td>
-                <td><span class="positive-return">0.34%</span></td>
-                <td><span class="positive-return">0.50%</span></td>
-                <td><span class="positive-return">0.93%</span></td>
-                <td><span class="positive-return">3.31%</span></td>
-                <td><span class="positive-return">10.02%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">23.70</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>20</td>
-                <td>013791</td>
-                <td style="text-align: left;" data-fund-name="大成稳安60天滚动持有债券C">大成稳安60天滚动持有债券C</td>
-                <td class="smoothness-score-cell">44.18</td>
-                <td>1.2635</td>
-                <td><span class="positive-return">0.30%</span></td>
-                <td><span class="positive-return">0.38%</span></td>
-                <td><span class="positive-return">1.60%</span></td>
-                <td><span class="positive-return">3.43%</span></td>
-                <td><span class="positive-return">9.63%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">34.97</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>21</td>
-                <td>015426</td>
-                <td style="text-align: left;" data-fund-name="东吴月月享30天持有短债A">东吴月月享30天持有短债A</td>
-                <td class="smoothness-score-cell">43.95</td>
-                <td>1.2752</td>
-                <td><span class="positive-return">0.25%</span></td>
-                <td><span class="positive-return">0.47%</span></td>
-                <td><span class="positive-return">0.99%</span></td>
-                <td><span class="positive-return">3.13%</span></td>
-                <td><span class="positive-return">9.49%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">0.59</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>22</td>
-                <td>008505</td>
-                <td style="text-align: left;" data-fund-name="浙商中短债A">浙商中短债A</td>
-                <td class="smoothness-score-cell">43.50</td>
-                <td>1.2989</td>
-                <td><span class="positive-return">0.31%</span></td>
-                <td><span class="positive-return">0.48%</span></td>
-                <td><span class="positive-return">1.02%</span></td>
-                <td><span class="positive-return">2.98%</span></td>
-                <td><span class="positive-return">12.12%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">5.74</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>23</td>
-                <td>007635</td>
-                <td style="text-align: left;" data-fund-name="银河天盈中短债A">银河天盈中短债A</td>
-                <td class="smoothness-score-cell">43.47</td>
-                <td>1.3003</td>
-                <td><span class="positive-return">0.27%</span></td>
-                <td><span class="positive-return">0.40%</span></td>
-                <td><span class="positive-return">0.84%</span></td>
-                <td><span class="positive-return">2.89%</span></td>
-                <td><span class="positive-return">9.26%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">0.65</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>24</td>
-                <td>008449</td>
-                <td style="text-align: left;" data-fund-name="德邦短债C">德邦短债C</td>
-                <td class="smoothness-score-cell">43.23</td>
-                <td>1.3132</td>
-                <td><span class="positive-return">0.32%</span></td>
-                <td><span class="positive-return">0.43%</span></td>
-                <td><span class="positive-return">0.80%</span></td>
-                <td><span class="positive-return">3.06%</span></td>
-                <td><span class="positive-return">9.19%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">13.09</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>25</td>
-                <td>008506</td>
-                <td style="text-align: left;" data-fund-name="浙商中短债C">浙商中短债C</td>
-                <td class="smoothness-score-cell">42.88</td>
-                <td>1.3319</td>
+                <td>5</td>
+                <td>013790</td>
+                <td style="text-align: left;" data-fund-name="大成稳安60天滚动持有债券A">大成稳安60天滚动持有债券A</td>
+                <td class="overall-score-cell">60.32</td>
+                <td>44.68</td>
+                <td>83.78</td>
                 <td><span class="positive-return">0.29%</span></td>
-                <td><span class="positive-return">0.43%</span></td>
-                <td><span class="positive-return">0.89%</span></td>
-                <td><span class="positive-return">2.74%</span></td>
-                <td><span class="positive-return">11.21%</span></td>
+                <td><span class="positive-return">0.45%</span></td>
+                <td><span class="positive-return">1.74%</span></td>
+                <td><span class="positive-return">3.65%</span></td>
+                <td><span class="positive-return">10.35%</span></td>
                 <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">1.82</td>
+                <td class="fund-scale">8.31</td>
             </tr>
         
 
             <tr class="">
-                <td>26</td>
-                <td>000694</td>
-                <td style="text-align: left;" data-fund-name="鑫元鸿利A">鑫元鸿利A</td>
-                <td class="smoothness-score-cell">42.38</td>
-                <td>1.3595</td>
-                <td><span class="positive-return">0.42%</span></td>
-                <td><span class="positive-return">0.33%</span></td>
-                <td><span class="positive-return">0.82%</span></td>
-                <td><span class="positive-return">2.61%</span></td>
-                <td><span class="positive-return">11.48%</span></td>
+                <td>6</td>
+                <td>013792</td>
+                <td style="text-align: left;" data-fund-name="大成稳安60天滚动持有债券E">大成稳安60天滚动持有债券E</td>
+                <td class="overall-score-cell">59.40</td>
+                <td>44.94</td>
+                <td>81.08</td>
+                <td><span class="positive-return">0.29%</span></td>
+                <td><span class="positive-return">0.44%</span></td>
+                <td><span class="positive-return">1.69%</span></td>
+                <td><span class="positive-return">3.55%</span></td>
+                <td><span class="positive-return">10.00%</span></td>
                 <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">12.21</td>
+                <td class="fund-scale">1.78</td>
             </tr>
         
 
             <tr class="">
-                <td>27</td>
-                <td>014490</td>
-                <td style="text-align: left;" data-fund-name="浙商双月鑫60天滚动持有中短债A">浙商双月鑫60天滚动持有中短债A</td>
-                <td class="smoothness-score-cell">42.08</td>
-                <td>1.3762</td>
-                <td><span class="positive-return">0.37%</span></td>
-                <td><span class="positive-return">0.35%</span></td>
-                <td><span class="positive-return">1.00%</span></td>
-                <td><span class="positive-return">3.53%</span></td>
-                <td><span class="positive-return">11.06%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">1.31</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>28</td>
-                <td>014491</td>
-                <td style="text-align: left;" data-fund-name="浙商双月鑫60天滚动持有中短债C">浙商双月鑫60天滚动持有中短债C</td>
-                <td class="smoothness-score-cell">40.68</td>
-                <td>1.4579</td>
-                <td><span class="positive-return">0.36%</span></td>
-                <td><span class="positive-return">0.31%</span></td>
-                <td><span class="positive-return">0.95%</span></td>
-                <td><span class="positive-return">3.43%</span></td>
-                <td><span class="positive-return">10.71%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">2.48</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>29</td>
-                <td>014083</td>
-                <td style="text-align: left;" data-fund-name="浙商汇金月享30天滚动持有中短债A">浙商汇金月享30天滚动持有中短债A</td>
-                <td class="smoothness-score-cell">40.06</td>
-                <td>1.4964</td>
-                <td><span class="positive-return">0.54%</span></td>
-                <td><span class="positive-return">0.32%</span></td>
-                <td><span class="positive-return">0.85%</span></td>
-                <td><span class="positive-return">3.24%</span></td>
-                <td><span class="positive-return">10.37%</span></td>
-                <td><span class="rating-average">一般</span></td>
-                <td class="fund-scale">4.66</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>30</td>
-                <td>006668</td>
-                <td style="text-align: left;" data-fund-name="华夏中短债债券A">华夏中短债债券A</td>
-                <td class="smoothness-score-cell">39.77</td>
-                <td>1.5147</td>
-                <td><span class="positive-return">0.38%</span></td>
-                <td><span class="positive-return">0.30%</span></td>
-                <td><span class="positive-return">0.62%</span></td>
-                <td><span class="positive-return">2.65%</span></td>
-                <td><span class="positive-return">9.09%</span></td>
-                <td><span class="rating-poor">较差</span></td>
-                <td class="fund-scale">90.06</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>31</td>
-                <td>015350</td>
-                <td style="text-align: left;" data-fund-name="银河季季盈90天滚动持有短债A">银河季季盈90天滚动持有短债A</td>
-                <td class="smoothness-score-cell">39.72</td>
-                <td>1.5174</td>
-                <td><span class="positive-return">0.20%</span></td>
-                <td><span class="positive-return">0.34%</span></td>
-                <td><span class="positive-return">0.80%</span></td>
-                <td><span class="positive-return">3.00%</span></td>
-                <td><span class="positive-return">9.92%</span></td>
-                <td><span class="rating-poor">较差</span></td>
-                <td class="fund-scale">12.34</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>32</td>
-                <td>014084</td>
-                <td style="text-align: left;" data-fund-name="浙商汇金月享30天滚动持有中短债C">浙商汇金月享30天滚动持有中短债C</td>
-                <td class="smoothness-score-cell">38.40</td>
-                <td>1.6042</td>
-                <td><span class="positive-return">0.52%</span></td>
-                <td><span class="positive-return">0.27%</span></td>
-                <td><span class="positive-return">0.75%</span></td>
-                <td><span class="positive-return">3.03%</span></td>
-                <td><span class="positive-return">9.71%</span></td>
-                <td><span class="rating-poor">较差</span></td>
-                <td class="fund-scale">15.60</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>33</td>
-                <td>015351</td>
-                <td style="text-align: left;" data-fund-name="银河季季盈90天滚动持有短债C">银河季季盈90天滚动持有短债C</td>
-                <td class="smoothness-score-cell">38.16</td>
-                <td>1.6203</td>
-                <td><span class="positive-return">0.17%</span></td>
-                <td><span class="positive-return">0.28%</span></td>
-                <td><span class="positive-return">0.69%</span></td>
-                <td><span class="positive-return">2.79%</span></td>
-                <td><span class="positive-return">9.23%</span></td>
-                <td><span class="rating-poor">较差</span></td>
-                <td class="fund-scale">4.27</td>
-            </tr>
-        
-
-            <tr class="">
-                <td>34</td>
+                <td>7</td>
                 <td>014511</td>
                 <td style="text-align: left;" data-fund-name="英大安盈30天滚动持有债券发起式A">英大安盈30天滚动持有债券发起式A</td>
-                <td class="smoothness-score-cell">32.25</td>
-                <td>2.1011</td>
+                <td class="overall-score-cell">59.35</td>
+                <td>32.25</td>
+                <td>100.00</td>
                 <td><span class="positive-return">0.26%</span></td>
                 <td><span class="positive-return">0.42%</span></td>
                 <td><span class="positive-return">0.65%</span></td>
@@ -837,11 +413,46 @@
         
 
             <tr class="">
-                <td>35</td>
+                <td>8</td>
+                <td>013791</td>
+                <td style="text-align: left;" data-fund-name="大成稳安60天滚动持有债券C">大成稳安60天滚动持有债券C</td>
+                <td class="overall-score-cell">56.73</td>
+                <td>44.09</td>
+                <td>75.68</td>
+                <td><span class="positive-return">0.27%</span></td>
+                <td><span class="positive-return">0.40%</span></td>
+                <td><span class="positive-return">1.63%</span></td>
+                <td><span class="positive-return">3.44%</span></td>
+                <td><span class="positive-return">9.66%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">34.97</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>9</td>
+                <td>014490</td>
+                <td style="text-align: left;" data-fund-name="浙商双月鑫60天滚动持有中短债A">浙商双月鑫60天滚动持有中短债A</td>
+                <td class="overall-score-cell">56.60</td>
+                <td>42.08</td>
+                <td>78.38</td>
+                <td><span class="positive-return">0.37%</span></td>
+                <td><span class="positive-return">0.35%</span></td>
+                <td><span class="positive-return">1.00%</span></td>
+                <td><span class="positive-return">3.53%</span></td>
+                <td><span class="positive-return">11.06%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">1.31</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>10</td>
                 <td>014512</td>
                 <td style="text-align: left;" data-fund-name="英大安盈30天滚动持有债券发起式C">英大安盈30天滚动持有债券发起式C</td>
-                <td class="smoothness-score-cell">30.43</td>
-                <td>2.2867</td>
+                <td class="overall-score-cell">56.09</td>
+                <td>30.43</td>
+                <td>94.59</td>
                 <td><span class="positive-return">0.25%</span></td>
                 <td><span class="positive-return">0.36%</span></td>
                 <td><span class="positive-return">0.55%</span></td>
@@ -853,11 +464,216 @@
         
 
             <tr class="">
-                <td>36</td>
+                <td>11</td>
+                <td>006932</td>
+                <td style="text-align: left;" data-fund-name="平安0-3年期政策性金融债债券A">平安0-3年期政策性金融债债券A</td>
+                <td class="overall-score-cell">54.72</td>
+                <td>51.56</td>
+                <td>59.46</td>
+                <td><span class="positive-return">0.40%</span></td>
+                <td><span class="positive-return">1.19%</span></td>
+                <td><span class="positive-return">2.08%</span></td>
+                <td><span class="positive-return">3.19%</span></td>
+                <td><span class="positive-return">9.81%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">0.19</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>12</td>
+                <td>016149</td>
+                <td style="text-align: left;" data-fund-name="中银季季享90天滚动持有中短债债券发起A">中银季季享90天滚动持有中短债债券发起A</td>
+                <td class="overall-score-cell">54.04</td>
+                <td>46.83</td>
+                <td>64.86</td>
+                <td><span class="positive-return">0.66%</span></td>
+                <td><span class="positive-return">0.56%</span></td>
+                <td><span class="positive-return">1.04%</span></td>
+                <td><span class="positive-return">3.25%</span></td>
+                <td><span class="positive-return">12.23%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">11.75</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>13</td>
+                <td>014491</td>
+                <td style="text-align: left;" data-fund-name="浙商双月鑫60天滚动持有中短债C">浙商双月鑫60天滚动持有中短债C</td>
+                <td class="overall-score-cell">53.60</td>
+                <td>40.68</td>
+                <td>72.97</td>
+                <td><span class="positive-return">0.36%</span></td>
+                <td><span class="positive-return">0.31%</span></td>
+                <td><span class="positive-return">0.95%</span></td>
+                <td><span class="positive-return">3.43%</span></td>
+                <td><span class="positive-return">10.71%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">2.48</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>14</td>
+                <td>008448</td>
+                <td style="text-align: left;" data-fund-name="德邦短债A">德邦短债A</td>
+                <td class="overall-score-cell">53.57</td>
+                <td>44.23</td>
+                <td>67.57</td>
+                <td><span class="positive-return">0.34%</span></td>
+                <td><span class="positive-return">0.50%</span></td>
+                <td><span class="positive-return">0.93%</span></td>
+                <td><span class="positive-return">3.31%</span></td>
+                <td><span class="positive-return">10.02%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">23.70</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>15</td>
+                <td>015426</td>
+                <td style="text-align: left;" data-fund-name="东吴月月享30天持有短债A">东吴月月享30天持有短债A</td>
+                <td class="overall-score-cell">49.07</td>
+                <td>43.95</td>
+                <td>56.76</td>
+                <td><span class="positive-return">0.25%</span></td>
+                <td><span class="positive-return">0.47%</span></td>
+                <td><span class="positive-return">0.99%</span></td>
+                <td><span class="positive-return">3.13%</span></td>
+                <td><span class="positive-return">9.49%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">0.59</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>16</td>
+                <td>014083</td>
+                <td style="text-align: left;" data-fund-name="浙商汇金月享30天滚动持有中短债A">浙商汇金月享30天滚动持有中短债A</td>
+                <td class="overall-score-cell">48.90</td>
+                <td>40.06</td>
+                <td>62.16</td>
+                <td><span class="positive-return">0.54%</span></td>
+                <td><span class="positive-return">0.32%</span></td>
+                <td><span class="positive-return">0.85%</span></td>
+                <td><span class="positive-return">3.24%</span></td>
+                <td><span class="positive-return">10.37%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">4.66</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>17</td>
+                <td>016150</td>
+                <td style="text-align: left;" data-fund-name="中银季季享90天滚动持有中短债债券发起C">中银季季享90天滚动持有中短债债券发起C</td>
+                <td class="overall-score-cell">46.91</td>
+                <td>45.75</td>
+                <td>48.65</td>
+                <td><span class="positive-return">0.64%</span></td>
+                <td><span class="positive-return">0.51%</span></td>
+                <td><span class="positive-return">0.93%</span></td>
+                <td><span class="positive-return">3.04%</span></td>
+                <td><span class="positive-return">11.56%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">5.60</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>18</td>
+                <td>008449</td>
+                <td style="text-align: left;" data-fund-name="德邦短债C">德邦短债C</td>
+                <td class="overall-score-cell">46.48</td>
+                <td>43.23</td>
+                <td>51.35</td>
+                <td><span class="positive-return">0.32%</span></td>
+                <td><span class="positive-return">0.43%</span></td>
+                <td><span class="positive-return">0.80%</span></td>
+                <td><span class="positive-return">3.06%</span></td>
+                <td><span class="positive-return">9.19%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">13.09</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>19</td>
+                <td>014748</td>
+                <td style="text-align: left;" data-fund-name="西部利得季季稳90天滚动持有债券A">西部利得季季稳90天滚动持有债券A</td>
+                <td class="overall-score-cell">45.60</td>
+                <td>50.78</td>
+                <td>37.84</td>
+                <td><span class="positive-return">0.47%</span></td>
+                <td><span class="positive-return">0.52%</span></td>
+                <td><span class="positive-return">1.25%</span></td>
+                <td><span class="positive-return">2.95%</span></td>
+                <td><span class="positive-return">10.03%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">10.30</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>20</td>
+                <td>013522</td>
+                <td style="text-align: left;" data-fund-name="华富吉丰60天滚动持有中短债A">华富吉丰60天滚动持有中短债A</td>
+                <td class="overall-score-cell">44.66</td>
+                <td>52.82</td>
+                <td>32.43</td>
+                <td><span class="positive-return">0.50%</span></td>
+                <td><span class="positive-return">0.62%</span></td>
+                <td><span class="positive-return">1.24%</span></td>
+                <td><span class="positive-return">2.88%</span></td>
+                <td><span class="positive-return">9.39%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">2.79</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>21</td>
+                <td>008505</td>
+                <td style="text-align: left;" data-fund-name="浙商中短债A">浙商中短债A</td>
+                <td class="overall-score-cell">42.32</td>
+                <td>43.50</td>
+                <td>40.54</td>
+                <td><span class="positive-return">0.31%</span></td>
+                <td><span class="positive-return">0.48%</span></td>
+                <td><span class="positive-return">1.02%</span></td>
+                <td><span class="positive-return">2.98%</span></td>
+                <td><span class="positive-return">12.12%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">5.74</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>22</td>
+                <td>006933</td>
+                <td style="text-align: left;" data-fund-name="平安0-3年期政策性金融债债券C">平安0-3年期政策性金融债债券C</td>
+                <td class="overall-score-cell">42.13</td>
+                <td>52.19</td>
+                <td>27.03</td>
+                <td><span class="positive-return">0.40%</span></td>
+                <td><span class="positive-return">1.17%</span></td>
+                <td><span class="positive-return">1.77%</span></td>
+                <td><span class="positive-return">2.83%</span></td>
+                <td><span class="positive-return">9.11%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">0.30</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>23</td>
                 <td>013546</td>
                 <td style="text-align: left;" data-fund-name="财通资管鸿享30天滚动中短债A">财通资管鸿享30天滚动中短债A</td>
-                <td class="smoothness-score-cell">22.67</td>
-                <td>3.4103</td>
+                <td class="overall-score-cell">41.71</td>
+                <td>22.67</td>
+                <td>70.27</td>
                 <td><span class="positive-return">0.46%</span></td>
                 <td><span class="positive-return">0.10%</span></td>
                 <td><span class="positive-return">0.36%</span></td>
@@ -869,52 +685,157 @@
         
 
             <tr class="">
-                <td>37</td>
-                <td>013547</td>
-                <td style="text-align: left;" data-fund-name="财通资管鸿享30天滚动中短债C">财通资管鸿享30天滚动中短债C</td>
-                <td class="smoothness-score-cell">18.88</td>
-                <td>4.2978</td>
-                <td><span class="positive-return">0.44%</span></td>
-                <td><span class="positive-return">0.06%</span></td>
+                <td>24</td>
+                <td>014084</td>
+                <td style="text-align: left;" data-fund-name="浙商汇金月享30天滚动持有中短债C">浙商汇金月享30天滚动持有中短债C</td>
+                <td class="overall-score-cell">41.42</td>
+                <td>38.40</td>
+                <td>45.95</td>
+                <td><span class="positive-return">0.52%</span></td>
                 <td><span class="positive-return">0.27%</span></td>
-                <td><span class="positive-return">3.11%</span></td>
-                <td><span class="positive-return">10.36%</span></td>
-                <td><span class="">很差</span></td>
-                <td class="fund-scale">1.68</td>
+                <td><span class="positive-return">0.75%</span></td>
+                <td><span class="positive-return">3.03%</span></td>
+                <td><span class="positive-return">9.71%</span></td>
+                <td><span class="rating-poor">较差</span></td>
+                <td class="fund-scale">15.60</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>25</td>
+                <td>013375</td>
+                <td style="text-align: left;" data-fund-name="平安元鑫120天滚动持有中短债A">平安元鑫120天滚动持有中短债A</td>
+                <td class="overall-score-cell">41.14</td>
+                <td>48.74</td>
+                <td>29.73</td>
+                <td><span class="positive-return">0.39%</span></td>
+                <td><span class="positive-return">0.51%</span></td>
+                <td><span class="positive-return">1.09%</span></td>
+                <td><span class="positive-return">2.86%</span></td>
+                <td><span class="positive-return">10.39%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">7.36</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>26</td>
+                <td>015350</td>
+                <td style="text-align: left;" data-fund-name="银河季季盈90天滚动持有短债A">银河季季盈90天滚动持有短债A</td>
+                <td class="overall-score-cell">41.13</td>
+                <td>39.72</td>
+                <td>43.24</td>
+                <td><span class="positive-return">0.20%</span></td>
+                <td><span class="positive-return">0.34%</span></td>
+                <td><span class="positive-return">0.80%</span></td>
+                <td><span class="positive-return">3.00%</span></td>
+                <td><span class="positive-return">9.92%</span></td>
+                <td><span class="rating-poor">较差</span></td>
+                <td class="fund-scale">12.34</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>27</td>
+                <td>007635</td>
+                <td style="text-align: left;" data-fund-name="银河天盈中短债A">银河天盈中短债A</td>
+                <td class="overall-score-cell">40.14</td>
+                <td>43.47</td>
+                <td>35.14</td>
+                <td><span class="positive-return">0.27%</span></td>
+                <td><span class="positive-return">0.40%</span></td>
+                <td><span class="positive-return">0.84%</span></td>
+                <td><span class="positive-return">2.89%</span></td>
+                <td><span class="positive-return">9.26%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">0.65</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>28</td>
+                <td>014749</td>
+                <td style="text-align: left;" data-fund-name="西部利得季季稳90天滚动持有债券C">西部利得季季稳90天滚动持有债券C</td>
+                <td class="overall-score-cell">37.01</td>
+                <td>50.87</td>
+                <td>16.22</td>
+                <td><span class="positive-return">0.46%</span></td>
+                <td><span class="positive-return">0.48%</span></td>
+                <td><span class="positive-return">1.14%</span></td>
+                <td><span class="positive-return">2.74%</span></td>
+                <td><span class="positive-return">9.37%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">3.28</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>29</td>
+                <td>013718</td>
+                <td style="text-align: left;" data-fund-name="兴银稳益30天持有期债券A">兴银稳益30天持有期债券A</td>
+                <td class="overall-score-cell">36.31</td>
+                <td>46.11</td>
+                <td>21.62</td>
+                <td><span class="positive-return">0.28%</span></td>
+                <td><span class="positive-return">0.57%</span></td>
+                <td><span class="positive-return">0.96%</span></td>
+                <td><span class="positive-return">2.76%</span></td>
+                <td><span class="positive-return">9.18%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">0.23</td>
+            </tr>
+        
+
+            <tr class="">
+                <td>30</td>
+                <td>008506</td>
+                <td style="text-align: left;" data-fund-name="浙商中短债C">浙商中短债C</td>
+                <td class="overall-score-cell">33.30</td>
+                <td>42.88</td>
+                <td>18.92</td>
+                <td><span class="positive-return">0.29%</span></td>
+                <td><span class="positive-return">0.43%</span></td>
+                <td><span class="positive-return">0.89%</span></td>
+                <td><span class="positive-return">2.74%</span></td>
+                <td><span class="positive-return">11.21%</span></td>
+                <td><span class="rating-average">一般</span></td>
+                <td class="fund-scale">1.82</td>
             </tr>
         
         </tbody>
     </table>
     
         <div class="explanation-container">
-        <h3>评价体系说明：趋势平滑度评估法</h3>
-        <p>本评价体系基于趋势平滑度评估法，通过计算相邻时间区间收益率的变化率，综合评估债券基金收益的稳定性。排序指标是<strong>平滑度得分</strong>，数值越大表示基金收益越稳定。</p>
+        <h3>评价体系说明：综合评分法</h3>
+        <p>本评价体系采用综合评分法，平衡考虑债券基金的<strong>稳定性</strong>和<strong>收益能力</strong>，为投资者提供更全面的基金评估。排序指标是<strong>综合得分</strong>，数值越大表示基金综合表现越好。</p>
         
         <div class="metric-definition">
             <strong>核心指标解释</strong>
             <ul>
-                <li><strong>平滑度得分：</strong> 综合评估基金收益稳定性的核心指标，得分越高表示收益越稳定</li>
-                <li><strong>加权变化率：</strong> 反映相邻时间区间收益率变化的程度，数值越小表示变化越平稳</li>
-                <li><strong>稳定性评级：</strong> 根据平滑度得分对基金稳定性进行评级（优秀、良好、一般、较差）</li>
+                <li><strong>综合得分：</strong> 结合稳定性得分和收益得分的加权评分，是最终排序依据（范围：0-100）</li>
+                <li><strong>稳定性得分：</strong> 评估基金收益稳定性的指标，基于趋势平滑度计算（范围：0-100）</li>
+                <li><strong>收益得分：</strong> 反映基金在所有评估基金中的收益排名百分位（范围：0-100）</li>
+                <li><strong>稳定性评级：</strong> 根据稳定性得分对基金稳定性进行评级（优秀、良好、一般、较差）</li>
                 <li><strong>基金规模：</strong> 基金的最新规模（单位：亿元），规模适中的基金通常具有更好的流动性</li>
             </ul>
         </div>
         
         <div class="metric-definition">
-            <strong>变化率计算方法</strong>
+            <strong>综合得分计算方法</strong>
             <div class="math-formula">
-                1个月到3个月变化率 = |3个月收益率 - 1个月收益率| / |1个月收益率|<br>
-                3个月到6个月变化率 = |6个月收益率 - 3个月收益率| / |3个月收益率|<br>
-                6个月到1年变化率 = |1年收益率 - 6个月收益率| / |6个月收益率|<br>
-                1年到2年变化率 = |2年收益率 - 1年收益率| / |1年收益率|<br>
-                2年到3年变化率 = |3年收益率 - 2年收益率| / |2年收益率|<br>
-                加权变化率 = 各变化率的加权平均值
+                综合得分 = 稳定性得分 × 0.6 + 收益得分 × 0.4
             </div>
+            <p>注：0.7和0.3分别为稳定性和收益能力的权重，可根据投资偏好调整。</p>
         </div>
         
         <div class="metric-definition">
-            <strong>平滑度得分计算</strong>
-            <p>平滑度得分基于加权变化率的倒数进行计算，并进行适当的归一化处理，使得分在0-100之间，方便直观比较。得分越高，表示基金收益变化越平稳。</p>
+            <strong>收益得分计算</strong>
+            <p>收益得分为基金在所有评估基金中的收益排名百分位，基于近1年收益率计算。得分越高，表示在同类基金中的收益排名越靠前。</p>
+        </div>
+        
+        <div class="metric-definition">
+            <strong>稳定性得分计算</strong>
+            <p>稳定性得分基于相邻时间区间收益率变化率的倒数进行计算，并进行归一化处理，使得分在0-100之间。得分越高，表示基金收益变化越平稳。</p>
         </div>
         
         <div class="metric-definition">
