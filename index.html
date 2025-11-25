@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="3600">
+    <title>Munger</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="quotes.js"></script>
+    
+    <!-- DataTables CSS 资源 -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f7f6; }
+        h1 { color: #1e88e5; }
+        
+        .loading { text-align: center; color: #555; padding: 20px; font-style: italic; }
+        .success { color: #4caf50; font-weight: bold; margin-top: 10px; }
+        .error { color: #e53935; font-weight: bold; margin-top: 10px; }
+        
+        /* 语录框样式 */
+        .quote-container { 
+            background-color: #fff9c4; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            padding: 20px; 
+            margin: 20px 0; 
+            box-shadow: 0 4px 8px rgba(0 0 0 / 10%); 
+            max-width: 800px; 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        .quote-text { 
+            font-size: 18px; 
+            font-style: italic; 
+            color: #856404; 
+            margin-bottom: 10px; 
+            line-height: 1.6; 
+        }
+        .quote-author { 
+            font-size: 15px;
+            text-align: right; 
+            font-weight: bold; 
+            color: #b83838; 
+        }
+        
+        /* 表头样式 */
+        #munger-table thead th {
+            background-color: #2196F3 !important;
+            color: white !important;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 2px solid #1976D2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📝 Munger 表格数据 (只读)</h1>
+    
+    <!-- 语录显示区域 -->
+    <div class="quote-container">
+        <div id="quote-text" class="quote-text">正在加载语录...</div>
+        <div id="quote-author" class="quote-author"></div>
+    </div>
+
+    <!-- DataTables 容器 -->
+    <div id="data-container">
+        <div class="loading">正在连接 Supabase 并加载数据...</div>
+        <!-- DataTables 表格结构 -->
+        <table id="munger-table" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Target Price</th>
+                    <th>Current Price</th>
+                    <th>Ratio</th>
+                    <th>Note</th>
+                    <th>Updated At</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    
+    <p id="message-status"></p>
+
+    <script>
+        // =======================================================================
+        // 【配置信息】
+        // =======================================================================
+        const SUPABASE_URL = 'https://qburustwmcjpnilofjsi.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFidXJ1c3R3bWNqcG5pbG9manNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTI4MjUsImV4cCI6MjA3OTM4ODgyNX0.mzJN1k0ogNnr9kpqtandH_OH9nHIIeNrde1uac4JEdc'; 
+        const TABLE_NAME = 'Munger'; 
+        
+        // 【排序配置】
+        const SORT_FIELD = 'ratio'; // 默认排序字段
+        const SORT_DIRECTION = 'asc'; // 默认排序方向：'asc'（升序）或 'desc'（降序）
+        // =======================================================================
+        
+        const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        const dataContainer = document.getElementById('data-container');
+        const statusMessage = document.getElementById('message-status');
+        const quoteTextElement = document.getElementById('quote-text');
+        const quoteAuthorElement = document.getElementById('quote-author');
+        
+        // DataTables 实例
+        let dataTableInstance = null;
+        
+        // 从quotesData中随机读取并显示语录的函数
+        function loadRandomQuote() {
+            try {
+                // 检查quotesData是否存在且是数组
+                if (!window.quotesData || !Array.isArray(window.quotesData) || window.quotesData.length === 0) {
+                    quoteTextElement.textContent = '无法加载语录数据';
+                    quoteAuthorElement.textContent = '';
+                    console.warn('quotesData不可用或为空');
+                    return;
+                }
+                
+                // 随机选择一条语录
+                const randomIndex = Math.floor(Math.random() * window.quotesData.length);
+                const selectedQuote = window.quotesData[randomIndex];
+                
+                // 更新DOM元素
+                if (selectedQuote && selectedQuote.quote) {
+                    quoteTextElement.textContent = selectedQuote.quote;
+                    quoteAuthorElement.textContent = selectedQuote.author ? `- ${selectedQuote.author}` : '';
+                } else {
+                    quoteTextElement.textContent = '语录格式不正确';
+                    quoteAuthorElement.textContent = '';
+                }
+            } catch (error) {
+                console.error('加载语录时出错:', error);
+                quoteTextElement.textContent = '加载语录时出错';
+                quoteAuthorElement.textContent = '';
+            }
+        }
+
+        // 状态消息显示函数
+        function showStatus(message, isError = false) {
+            statusMessage.textContent = message;
+            statusMessage.className = isError ? 'error' : 'success';
+            setTimeout(() => {
+                statusMessage.textContent = '';
+                statusMessage.className = '';
+            }, 3000);
+        }
+
+        // --- 数据格式化辅助函数 ---
+        function formatDateTime(isoString) {
+            if (!isoString) return '-';
+            try { 
+                const [date, time] = isoString.split('T');
+                const timePart = time ? time.substring(0, 8) : '';
+                return timePart ? `${date} ${timePart}` : date;
+            } catch (e) { return isoString; }
+        }
+        function formatPrice(value) {
+            if (value === null || isNaN(value)) return '-';
+            return parseFloat(value).toFixed(2);
+        }
+        function formatRatio(value) {
+            if (value === null || isNaN(value)) return '-';
+            return (parseFloat(value) * 100).toFixed(2) + '%';
+        }
+
+        // -----------------------------------------------------------------------
+        // 函数：从 Supabase 读取数据并初始化 DataTables
+        // -----------------------------------------------------------------------
+        async function fetchAndDisplayData() {
+            // 隐藏表格，显示加载状态
+            if (dataTableInstance) {
+                dataTableInstance.destroy();
+                dataTableInstance = null;
+            }
+            
+            dataContainer.innerHTML = '<div class="loading">正在从 Supabase 读取数据...</div>';
+            
+            try {
+                // 1. 从数据库获取所有数据
+                let { data: rows, error } = await client
+                    .from(TABLE_NAME)
+                    .select('*')
+                    .order(SORT_FIELD, { ascending: SORT_DIRECTION === 'asc' }); 
+
+                if (error) {
+                    console.error('Supabase 错误:', error);
+                    dataContainer.innerHTML = `<p class="error">数据加载失败！错误信息：${error.message}</p>`;
+                    showStatus('读取数据失败', true);
+                    return;
+                }
+
+                if (!rows || rows.length === 0) {
+                     dataContainer.innerHTML = '<p class="loading">数据库中没有找到数据。</p>';
+                     return;
+                }
+
+                // 重新创建表格容器
+                dataContainer.innerHTML = `
+                    <table id="munger-table" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th>Target Price</th>
+                                <th>Current Price</th>
+                                <th>Ratio</th>
+                                <th>Note</th>
+                                <th>Updated At</th>
+                            </tr>
+                        </thead>
+                    </table>
+                `;
+
+                // 初始化 DataTables
+                $(document).ready(function() {
+                    dataTableInstance = $('#munger-table').DataTable({
+                        language: {
+                            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/zh.json'
+                        },
+                        data: rows,
+                        columns: [
+                            { 
+                                data: 'name', 
+                                title: 'NAME',
+                                orderSequence: ["asc", "desc"]
+                            },
+                            { 
+                                data: 'code', 
+                                title: 'CODE',
+                                orderSequence: ["asc", "desc"]
+                            },
+                            { 
+                                data: 'target_price', 
+                                title: 'TARGET PRICE',
+                                render: function(data, type) {
+                                    if (type === 'display') {
+                                        return formatPrice(data);
+                                    }
+                                    return data;
+                                },
+                                orderSequence: ["asc", "desc"]
+                            },
+                            { 
+                                data: 'current_price', 
+                                title: 'CURRENT PRICE',
+                                render: function(data, type) {
+                                    if (type === 'display') {
+                                        return formatPrice(data);
+                                    }
+                                    return data;
+                                },
+                                orderSequence: ["asc", "desc"]
+                            },
+                            { 
+                                data: 'ratio', 
+                                title: 'RATIO',
+                                render: function(data, type) {
+                                    if (type === 'display') {
+                                        const formattedValue = formatRatio(data);
+                                        const ratioValue = parseFloat(data) * 100;
+                                        if (ratioValue <= 5) {
+                                            return `<span style="color: #4caf50; font-weight: bold;">${formattedValue}</span>`;
+                                        }
+                                        return formattedValue;
+                                    }
+                                    return data;
+                                },
+                                orderSequence: ["asc", "desc"]
+                            },
+                            { 
+                                data: 'note', 
+                                title: 'NOTE',
+                                orderSequence: ["asc", "desc"]
+                            },
+                            { 
+                                data: 'updated_at', 
+                                title: 'UPDATED AT',
+                                render: function(data, type) {
+                                    if (type === 'display') {
+                                        return formatDateTime(data);
+                                    }
+                                    return data;
+                                },
+                                orderSequence: ["desc", "asc"]
+                            }
+                        ],
+                        // 默认排序：按 ratio 列升序（对应第5列，索引为4）
+                        order: [[4, 'asc']],
+                        // 隐藏搜索、分页和长度选择功能
+                        searching: false,
+                        paging: false,
+                        lengthChange: false,
+                        info: true,
+                        responsive: true,
+                        dom: 'lftrip' // 支持全功能：搜索、分页、长度、信息，要开启设置true
+                    });
+                });
+                
+                showStatus('数据加载成功');
+                
+            } catch (e) {
+                console.error('JS 运行时错误:', e);
+                dataContainer.innerHTML = `<p class="error">页面初始化失败！请检查控制台错误。</p>`;
+            }
+        }
+
+        // 页面加载完成后调用主函数和语录加载函数
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndDisplayData(); 
+            loadRandomQuote();
+        });
+
+    </script>
+</body>
+</html>
