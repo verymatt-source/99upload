@@ -75,7 +75,7 @@
 </head>
 <body>
 
-    <h1>📝📝 Munger 表格数据 (只读)</h1>
+    <h1>📝 Munger 表格数据 (只读)</h1>
     
     <!-- 刷新状态提示 -->
     <div id="refresh-status" class="refresh-status"></div>
@@ -93,7 +93,7 @@
     
     <p id="message-status"></p>
 
-    <script>
+   <script>
         // =======================================================================
         // 【配置信息】
         // =======================================================================
@@ -101,9 +101,13 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFidXJ1c3R3bWNqcG5pbG9manNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTI4MjUsImV4cCI6MjA3OTM4ODgyNX0.mzJN1k0ogNnr9kpqtandH_OH9nHIIeNrde1uac4JEdc'; 
         const TABLE_NAME = 'Munger'; 
         
-        // 定时刷新配置
-        const REFRESH_INTERVAL = 600000; // 10分钟刷新间隔
-        const CHECK_INTERVAL = 300000;   // 5分钟检查间隔
+        // 定时刷新配置 (改为统一检查间隔，简化逻辑)
+        // 核心：设置一个基础的检查间隔，让它来决定是否要刷新
+        const BASE_CHECK_INTERVAL = 60000; // 1分钟检查一次
+        const REFRESH_INTERVAL = 600000; // 10分钟刷新间隔 (不变，用于时间对比)
+
+        // 语录更新配置
+        const QUOTE_UPDATE_INTERVAL = 300000; // 5分钟更新一次语录
         
 
         // =======================================================================
@@ -118,7 +122,9 @@
         
         // DataTables 实例
         let dataTableInstance = null;
-        
+        // 新增：用于记录上次刷新时间
+        let lastRefreshTime = 0; 
+
         // 从quotesData中随机读取并显示语录的函数
         function loadRandomQuote() {
             try {
@@ -282,36 +288,82 @@
         }
 
         // =======================================================================
-        // 【定时刷新功能】只在 10:00-15:00 之间每10分钟刷新页面
+        // 【语录定时更新功能】每5分钟更新一次语录
+        // =======================================================================
+        function setupQuoteUpdate() {
+            function updateQuote() {
+                console.log('📝 更新语录...');
+                loadRandomQuote();
+                showRefreshStatus('语录已更新');
+            }
+            
+            // 立即显示一条语录
+            loadRandomQuote();
+            
+            // 设置定时器，每5分钟更新一次语录
+            setInterval(updateQuote, QUOTE_UPDATE_INTERVAL);
+            
+            console.log(`📝 语录定时更新已启动，每 ${QUOTE_UPDATE_INTERVAL/1000/60} 分钟更新一次`);
+        }
+
+        // =======================================================================
+        // 【修正后的定时刷新功能】每分钟检查一次，在 10:00-15:00 之间每10分钟刷新页面
         // =======================================================================
         function setupConditionalRefresh() {
-            function checkTimeAndRefresh() {
-                const hour = new Date().getHours();
+            // 页面加载时，初始化 lastRefreshTime 为当前时间，确保第一次检查后不会立即刷新
+            lastRefreshTime = Date.now();
+            console.log(`🔄 首次加载时间已记录: ${new Date(lastRefreshTime).toLocaleTimeString()}`);
 
-                if (hour >= 10 && hour < 15) {
-                    console.log(`🕒 ${new Date().toLocaleTimeString()} - 在刷新时段内，${REFRESH_INTERVAL/1000/60}分钟后自动刷新`);
-                    showRefreshStatus(`刷新时段内，${REFRESH_INTERVAL/1000/60}分钟后自动刷新`);
+
+            function checkTimeAndRefresh() {
+                const now = new Date();
+                const hour = now.getHours();
+                const currentTime = now.getTime();
+                
+                // 1. 检查是否在刷新时段内 (10:00 到 14:59:59)
+                const inRefreshWindow = (hour >= 10 && hour < 15);
+                
+                // 2. 检查距离上次刷新的时间是否已超过 REFRESH_INTERVAL (10分钟)
+                const timeElapsed = currentTime - lastRefreshTime;
+                const shouldRefresh = timeElapsed >= REFRESH_INTERVAL;
+
+
+                if (inRefreshWindow && shouldRefresh) {
+                    console.log(`✅ ${now.toLocaleTimeString()} - 在刷新时段内且超过 ${REFRESH_INTERVAL/1000/60} 分钟，自动刷新...`);
+                    showRefreshStatus('正在自动刷新页面...');
                     
-                    setTimeout(() => {
-                        console.log('🔄 自动刷新页面...');
-                        showRefreshStatus('正在刷新页面...');
-                        location.reload();
-                    }, REFRESH_INTERVAL);
-                } else {
-                    console.log(`⏸⏸⏸️ ${new Date().toLocaleTimeString()} - 非刷新时段，${CHECK_INTERVAL/1000/60}分钟后再次检查`);
-                    setTimeout(checkTimeAndRefresh, CHECK_INTERVAL);
+                    // 执行页面刷新
+                    location.reload(); 
+                    
+                    // 注意：location.reload() 后，下面的代码不会执行，
+                    // 新加载的页面会重新初始化 lastRefreshTime 并启动循环。
+                    
+                } else if (inRefreshWindow) {
+                     const timeRemaining = REFRESH_INTERVAL - timeElapsed;
+                     const minutesRemaining = Math.ceil(timeRemaining / 60000);
+                     console.log(`🕒 ${now.toLocaleTimeString()} - 在刷新时段内，距下次刷新还剩约 ${minutesRemaining} 分钟。`);
+                     showRefreshStatus(`刷新时段内，距下次刷新还剩约 ${minutesRemaining} 分钟`);
+                } 
+                else {
+                    console.log(`⏸️ ${now.toLocaleTimeString()} - 非刷新时段，等待下次检查...`);
                 }
             }
             
-            // 页面加载后启动检查
-            checkTimeAndRefresh();
+            // 设置一个每分钟运行一次的 setInterval 持续检查时间
+            // 这样无论用户在哪个时段打开页面，检查都会周期性地运行。
+            setInterval(checkTimeAndRefresh, BASE_CHECK_INTERVAL);
+            
+            console.log(`🔄 定时刷新检查已启动，每 ${BASE_CHECK_INTERVAL/1000/60} 分钟检查一次`);
+            
+            // 页面加载后立即执行一次检查
+            checkTimeAndRefresh(); 
         }
 
         // 页面加载完成后调用主函数和语录加载函数
         document.addEventListener('DOMContentLoaded', () => {
             fetchAndDisplayData(); 
-            loadRandomQuote();
-            setupConditionalRefresh(); // 启动定时刷新检查
+            setupQuoteUpdate(); // 启动语录定时更新
+            setupConditionalRefresh(); // 启动定时刷新检查 (修正后的版本)
         });
 
     </script>
