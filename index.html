@@ -3,368 +3,346 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 防止标签页休眠：页面自动刷新 -->
+    <meta http-equiv="refresh" content="1200">
+    
     <title>Munger</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="quotes.js"></script>
     
-    <!-- DataTables CSS 资源 -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f7f6; }
-        h1 { color: #1e88e5; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f7f6; color: #333; }
+        h1 { color: #1e88e5; margin-bottom: 20px; }
         
-        .loading { text-align: center; color: #555; padding: 20px; font-style: italic; }
-        .success { color: #4caf50; font-weight: bold; margin-top: 10px; }
-        .error { color: #e53935; font-weight: bold; margin-top: 10px; }
+
         
         /* 语录框样式 */
         .quote-container { 
             background-color: #fff9c4; 
             border: 1px solid #e0e0e0; 
             border-radius: 8px; 
-            padding: 20px; 
-            margin: 20px auto; 
+            padding: 15px 20px; 
+            margin: 0 auto 20px auto; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-            max-width: 800px; 
+            max-width: 40%; 
         }
-        .quote-text { 
-            font-size: 18px; 
-            font-style: italic; 
-            color: #856404; 
-            margin-bottom: 10px; 
-            line-height: 1.6; 
-        }
-        .quote-author { 
-            font-size: 15px;
-            text-align: right; 
-            font-weight: bold; 
-            color: #b83838; 
-        }
+        .quote-text { font-size: 18px; font-style: italic; color: #856404; margin-bottom: 5px; line-height: 1.5; }
+        .quote-author { font-size: 14px; text-align: right; font-weight: bold; color: #b83838; }
         
-        /* 表头样式 */
-        #munger-table thead th {
-            background-color: #2196F3 !important;
-            color: white !important;
+        /* 表格样式优化 */
+        table.dataTable thead th {
+            background-color: #2196F3;
+            color: white;
             font-weight: bold;
             text-align: center;
             border-bottom: 2px solid #1976D2;
-            border-right: 1px solid rgba(255,255,255,0.3);
+            /* 【新增】字段间垂直分隔线 */
+            border-right: 2px solid rgba(255, 255, 255, 0.3); 
         }
-        #munger-table thead th:last-child {
+        /* 【新增】移除最后一列的右侧边框，使外观更整洁 */
+        table.dataTable thead th:last-child {
             border-right: none;
+        }
+        
+        table.dataTable tbody td {
+            vertical-align: middle;
         }
         
         /* 刷新状态提示样式 */
         .refresh-status {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            z-index: 1000;
-            display: none;
+            position: fixed; top: 10px; right: 10px;
+            background: rgba(0, 0, 0, 0.8); color: white;
+            padding: 8px 12px; border-radius: 4px; font-size: 12px;
+            z-index: 1000; display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
+        
+        /* 动画效果 */
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
-
-    <h1>📝 Munger 表格数据 (只读)</h1>
     
-    <!-- 刷新状态提示 -->
-    <div id="refresh-status" class="refresh-status"></div>
-    
-    <!-- 语录显示区域 -->
     <div class="quote-container">
         <div id="quote-text" class="quote-text">正在加载语录...</div>
         <div id="quote-author" class="quote-author"></div>
     </div>
 
-    <!-- DataTables 容器 -->
+    <h1>📝 Munger 表格数据 (只读)</h1>
+    
+    <div id="refresh-status" class="refresh-status"></div>
+
     <div id="data-container">
-        <div class="loading">正在连接 Supabase 并加载数据...</div>
+        <table id="munger-table" class="display" style="width:100%">
+            </table>
     </div>
     
-    <p id="message-status"></p>
-
-   <script>
+    <br><br>
+    
+    <h1>📊 指数PE数据 (只读)</h1>
+    
+    <div id="pe-data-container">
+        <table id="pe-table" class="display" style="width:100%">
+            </table>
+    </div>
+    
+    <script>
         // =======================================================================
         // 【配置信息】
         // =======================================================================
-        const SUPABASE_URL = 'https://qburustwmcjpnilofjsi.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFidXJ1c3R3bWNqcG5pbG9manNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTI4MjUsImV4cCI6MjA3OTM4ODgyNX0.mzJN1k0ogNnr9kpqtandH_OH9nHIIeNrde1uac4JEdc'; 
-        const TABLE_NAME = 'Munger'; 
+        const CONFIG = {
+            SUPABASE_URL: 'https://qburustwmcjpnilofjsi.supabase.co',
+            SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFidXJ1c3R3bWNqcG5pbG9manNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTI4MjUsImV4cCI6MjA3OTM4ODgyNX0.mzJN1k0ogNnr9kpqtandH_OH9nHIIeNrde1uac4JEdc',
+            TABLE_NAME: 'Munger',
+            PE_TABLE_NAME: 'all_indexes_PE',
+            QUOTE_INTERVAL: 300000,    // 5分钟更新语录
+        };
         
-        // 定时刷新配置 (改为统一检查间隔，简化逻辑)
-        // 核心：设置一个基础的检查间隔，让它来决定是否要刷新
-        const BASE_CHECK_INTERVAL = 60000; // 1分钟检查一次
-        const REFRESH_INTERVAL = 600000; // 10分钟刷新间隔 (不变，用于时间对比)
-
-        // 语录更新配置
-        const QUOTE_UPDATE_INTERVAL = 300000; // 5分钟更新一次语录
+        const client = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
         
-
-        // =======================================================================
+        const els = {
+            quoteText: document.getElementById('quote-text'),
+            quoteAuthor: document.getElementById('quote-author'),
+            refreshStatus: document.getElementById('refresh-status')
+        };
         
-        const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        const dataContainer = document.getElementById('data-container');
-        const statusMessage = document.getElementById('message-status');
-        const quoteTextElement = document.getElementById('quote-text');
-        const quoteAuthorElement = document.getElementById('quote-author');
-        const refreshStatusElement = document.getElementById('refresh-status');
-        
-        // DataTables 实例
         let dataTableInstance = null;
-        // 新增：用于记录上次刷新时间
-        let lastRefreshTime = 0; 
-
-        // 从quotesData中随机读取并显示语录的函数
-        function loadRandomQuote() {
-            try {
-                // 检查quotesData是否存在且是数组
-                if (!window.quotesData || !Array.isArray(window.quotesData) || window.quotesData.length === 0) {
-                    quoteTextElement.textContent = '无法加载语录数据';
-                    quoteAuthorElement.textContent = '';
-                    console.warn('quotesData不可用或为空');
-                    return;
-                }
-                
-                // 随机选择一条语录
-                const randomIndex = Math.floor(Math.random() * window.quotesData.length);
-                const selectedQuote = window.quotesData[randomIndex];
-                
-                // 更新DOM元素
-                if (selectedQuote && selectedQuote.quote) {
-                    quoteTextElement.textContent = selectedQuote.quote;
-                    quoteAuthorElement.textContent = selectedQuote.author ? `- ${selectedQuote.author}` : '';
-                } else {
-                    quoteTextElement.textContent = '语录格式不正确';
-                    quoteAuthorElement.textContent = '';
-                }
-            } catch (error) {
-                console.error('加载语录时出错:', error);
-                quoteTextElement.textContent = '加载语录时出错';
-                quoteAuthorElement.textContent = '';
-            }
-        }
-
-        // 状态消息显示函数
-        function showStatus(message, isError = false) {
-            statusMessage.textContent = message;
-            statusMessage.className = isError ? 'error' : 'success';
-            setTimeout(() => statusMessage.textContent = '', 3000);
-        }
-
-        // 刷新状态显示函数
-        function showRefreshStatus(message, isError = false) {
-            refreshStatusElement.textContent = message;
-            refreshStatusElement.style.display = 'block';
-            refreshStatusElement.style.background = isError ? 'rgba(229, 57, 53, 0.8)' : 'rgba(0, 0, 0, 0.7)';
-            
-            setTimeout(() => {
-                refreshStatusElement.style.display = 'none';
-            }, 3000);
-        }
-
-        // --- 数据格式化辅助函数 ---
-        function formatDateTime(isoString) {
-            if (!isoString) return '-';
-            try {
-                // 直接提取年月日-时分秒部分
-                return isoString.replace('T', ' ').split('.')[0];
-            } catch (e) { return isoString; }
-        }
-        function formatPrice(value) {
-            if (value === null || isNaN(value)) return '-';
-            return parseFloat(value).toFixed(2);
-        }
-        function formatRatio(value) {
-            if (value === null || isNaN(value)) return '-';
-            return (parseFloat(value) * 100).toFixed(2) + '%';
-        }
+        let peDataTableInstance = null;
+        
+        // 缓存表格配置对象
+        let mungerTableConfig = null;
+        let peTableConfig = null;
 
         // -----------------------------------------------------------------------
-        // 函数：从 Supabase 读取数据并初始化 DataTables
+        // 核心逻辑：获取数据 (SPA模式)
         // -----------------------------------------------------------------------
-        async function fetchAndDisplayData() {
-            dataContainer.innerHTML = '<div class="loading">正在从 Supabase 读取数据...</div>';
+        async function fetchData() {
+            showRefreshStatus('正在同步最新数据...');
             
             try {
-                const { data: rows, error } = await client
-                    .from(TABLE_NAME)
+                // 获取 Munger 数据
+                const { data: mungerData, error: mungerError } = await client
+                    .from(CONFIG.TABLE_NAME)
                     .select('*')
-                    .order('ratio', { ascending: true }); 
+                    .order('ratio', { ascending: true });
 
-                if (error) {
-                    showErrorState(`数据加载失败！错误信息：${error.message}`, '读取数据失败');
+                if (mungerError) throw mungerError;
+
+                // 获取 PE 数据
+                const { data: peData, error: peError } = await client
+                    .from(CONFIG.PE_TABLE_NAME)
+                    .select('*')
+                    .order('平均收益率', { ascending: false });
+
+                if (peError) throw peError;
+
+                if ((!mungerData || mungerData.length === 0) && (!peData || peData.length === 0)) {
+                    showRefreshStatus('数据库为空', true);
                     return;
                 }
 
-                if (!rows || rows.length === 0) {
-                    dataContainer.innerHTML = '<p class="loading">数据库中没有找到数据。</p>';
-                    return;
-                }
-
-                createDataTable(rows);
-                showStatus('数据加载成功');
+                updateTable(mungerData);
+                updatePETable(peData);
+                showRefreshStatus('数据已更新');
                 
             } catch (e) {
-                console.error('JS 运行时错误:', e);
-                showErrorState('页面初始化失败！请检查控制台错误。', '页面初始化失败');
+                console.error('Data Fetch Error:', e);
+                console.error('Error details:', {
+                    message: e.message,
+                    status: e.status,
+                    details: e.details,
+                    hint: e.hint
+                });
+                showRefreshStatus(`数据更新失败: ${e.message || '未知错误'}`, true);
             }
         }
 
-        function showErrorState(message, statusText) {
-            dataContainer.innerHTML = `<p class="error">${message}</p>`;
-            showStatus(statusText, true);
+        // -----------------------------------------------------------------------
+        // 表格更新逻辑
+        // -----------------------------------------------------------------------
+        function updateTable(data) {
+            if (!dataTableInstance) {
+                // 创建并缓存配置
+                mungerTableConfig = {
+                    hiddenFields: ['id', 'created_at', 'frequency'],
+                    numFields: ['target_price', 'current_price'],
+                    percentFields: ['ratio'],
+                    timeFields: ['updated_at'],
+                    specialFields: [{
+                        field: 'ratio',
+                        format: createColorFormat(10, '#4caf50', '#555')
+                    }]
+                };
+                
+                // 动态计算 ratio 列索引
+                const visibleColumns = Object.keys(data[0] || {}).filter(key => !mungerTableConfig.hiddenFields.includes(key));
+                mungerTableConfig.order = [[visibleColumns.indexOf('ratio'), 'asc']];
+                
+                dataTableInstance = initTable('munger-table', data, mungerTableConfig);
+            } else {
+                // 使用缓存的配置
+                const processedData = preprocessTableData(data, mungerTableConfig);
+                dataTableInstance.clear().rows.add(processedData).draw(false);
+            }
         }
 
-        function createDataTable(data) {
-            // 清理旧实例
-            if (dataTableInstance) {
-                dataTableInstance.destroy();
+        function updatePETable(data) {
+            if (!peDataTableInstance) {
+                // 创建并缓存配置
+                peTableConfig = {
+                    hiddenFields: ['id', 'created_at', '胜率_Numeric', '平均收益率_Numeric'],
+                    numFields: [],
+                    percentFields: ['当前指数百分位', '当前PE百分位', '平均指数点位百分位', '胜率', '平均收益率', '买入分位数'],
+                    timeFields: ['更新时间'],
+                    specialFields: [{
+                        field: '当前PE百分位',
+                        format: createColorFormat(20, '#4caf50', '#555')
+                    }]
+                };
+                
+                peDataTableInstance = initTable('pe-table', data, peTableConfig);
+            } else {
+                // 使用缓存的配置
+                const processedData = preprocessTableData(data, peTableConfig);
+                peDataTableInstance.clear().rows.add(processedData).draw(false);
             }
+        }
+
+        function initTable(tableId, data, config) {
+            // 使用统一的数据预处理函数
+            const processedData = preprocessTableData(data, config);
             
-            dataContainer.innerHTML = '<table id="munger-table" class="display" style="width:100%"><thead><tr><th>Name</th><th>Code</th><th>Target Price</th><th>Current Price</th><th>Ratio</th><th>Note</th><th>Updated At</th></tr></thead></table>';
-            dataTableInstance = $('#munger-table').DataTable({
-                language: {
-                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/zh.json'
-                },
-                data: data,
-                columns: getTableColumns(),
-                order: [[4, 'asc']],
+            // 生成列定义
+            const columns = Object.keys(processedData[0] || {})
+                .filter(key => !config.hiddenFields.includes(key))
+                .map(key => ({ data: key, title: key }));
+            
+            // 创建表格实例
+            const tableInstance = $(`#${tableId}`).DataTable({
+                language: { url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/zh.json' },
+                data: processedData,
+                columns: columns,
+                order: config.order,
                 searching: false,
                 paging: false,
-                lengthChange: false,
                 info: true,
                 responsive: true,
-                dom: 'rtip'
+                createdRow: function(row, data, dataIndex) {
+                    $(row).addClass('fade-in');
+                }
+            });
+            
+            return tableInstance;
+        }
+
+
+        // -----------------------------------------------------------------------
+        // 工具函数
+        // -----------------------------------------------------------------------
+        
+        // 统一百分比格式化函数
+        function formatPercent(value) {
+            const val = parseFloat(value);
+            if (!isNaN(val) && isFinite(val)) {
+                return  (val * 100).toFixed(2) + '%';
+            }
+            return value;
+        }
+        
+        // 时间格式化函数
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return dateTimeStr;
+            return dateTimeStr.replace('T', ' ').replace('+00:00', '').replace(/\.\d+/, '').replace(' 00:00:00','');
+        }
+        
+        // 颜色格式化生成函数
+        function createColorFormat(threshold, color = '#4caf50', defaultColor = '#555') {
+            return (value) => {
+                const numValue = parseFloat(value);
+                const finalColor = numValue <= threshold ? color : defaultColor;
+                return `<span style="color:${finalColor}; font-weight:bold;">${value}</span>`;
+            };
+        }
+        
+        // 数据预处理函数
+        function preprocessTableData(data, config) {
+            return data.map(row => {
+                const processedRow = { ...row };
+                
+                // 数字格式化
+                if (config.numFields) {
+                    config.numFields.forEach(field => {
+                        if (processedRow[field] !== null && processedRow[field] !== undefined) {
+                            processedRow[field] = parseFloat(processedRow[field]).toFixed(2);
+                        }
+                    });
+                }
+                
+                // 百分比格式化（使用统一函数）
+                if (config.percentFields) {
+                    config.percentFields.forEach(field => {
+                        if (processedRow[field] !== null && processedRow[field] !== undefined) {
+                            processedRow[field] = formatPercent(processedRow[field]);
+                        }
+                    });
+                }
+                
+                // 特殊字段处理
+                if (config.specialFields) {
+                    config.specialFields.forEach(special => {
+                        if (processedRow[special.field] !== null && processedRow[special.field] !== undefined) {
+                            processedRow[special.field] = special.format(processedRow[special.field]);
+                        }
+                    });
+                }
+                
+                // 时间格式化（使用统一函数）
+                if (config.timeFields) {
+                    config.timeFields.forEach(field => {
+                        if (processedRow[field]) {
+                            processedRow[field] = formatDateTime(processedRow[field]);
+                        }
+                    });
+                }
+                
+                return processedRow;
             });
         }
 
-        function getTableColumns() {
-            return [
-                { data: 'name', title: '名称' },
-                { data: 'code', title: '代码' },
-                { 
-                    data: 'target_price', 
-                    title: '目标价',
-                    render: (data, type) => type === 'display' ? formatPrice(data) : data
-                },
-                { 
-                    data: 'current_price', 
-                    title: '现价',
-                    render: (data, type) => type === 'display' ? formatPrice(data) : data
-                },
-                { 
-                    data: 'ratio', 
-                    title: '比例',
-                    render: (data, type) => {
-                        if (type === 'display') {
-                            const formattedValue = formatRatio(data);
-                            const ratioValue = parseFloat(data) * 100;
-                            return ratioValue <= 5 ? 
-                                `<span style="color: #4caf50; font-weight: bold;">${formattedValue}</span>` : 
-                                formattedValue;
-                        }
-                        return data;
-                    }
-                },
-                { data: 'note', title: '备注' },
-                { 
-                    data: 'updated_at', 
-                    title: '更新时间',
-                    render: (data, type) => type === 'display' ? formatDateTime(data) : data,
-                    orderSequence: ["desc", "asc"]
-                }
-            ];
-        }
-
-        // =======================================================================
-        // 【语录定时更新功能】每5分钟更新一次语录
-        // =======================================================================
-        function setupQuoteUpdate() {
-            function updateQuote() {
-                console.log('📝 更新语录...');
-                loadRandomQuote();
-                showRefreshStatus('语录已更新');
+        // -----------------------------------------------------------------------
+        // 辅助函数
+        // -----------------------------------------------------------------------
+        
+        function loadRandomQuote() {
+            if (!window.quotesData || !Array.isArray(window.quotesData)) {
+                els.quoteText.textContent = 'Data Not Found';
+                return;
             }
-            
-            // 立即显示一条语录
-            loadRandomQuote();
-            
-            // 设置定时器，每5分钟更新一次语录
-            setInterval(updateQuote, QUOTE_UPDATE_INTERVAL);
-            
-            console.log(`📝 语录定时更新已启动，每 ${QUOTE_UPDATE_INTERVAL/1000/60} 分钟更新一次`);
+            const item = window.quotesData[Math.floor(Math.random() * window.quotesData.length)];
+            els.quoteText.textContent = item.quote;
+            els.quoteAuthor.textContent = item.author ? `- ${item.author}` : '';
         }
 
-        // =======================================================================
-        // 【修正后的定时刷新功能】每分钟检查一次，在 10:00-15:00 之间每10分钟刷新页面
-        // =======================================================================
-        function setupConditionalRefresh() {
-            // 页面加载时，初始化 lastRefreshTime 为当前时间，确保第一次检查后不会立即刷新
-            lastRefreshTime = Date.now();
-            console.log(`🔄 首次加载时间已记录: ${new Date(lastRefreshTime).toLocaleTimeString()}`);
-
-
-            function checkTimeAndRefresh() {
-                const now = new Date();
-                const hour = now.getHours();
-                const currentTime = now.getTime();
-                
-                // 1. 检查是否在刷新时段内 (10:00 到 14:59:59)
-                const inRefreshWindow = (hour >= 10 && hour < 15);
-                
-                // 2. 检查距离上次刷新的时间是否已超过 REFRESH_INTERVAL (10分钟)
-                const timeElapsed = currentTime - lastRefreshTime;
-                const shouldRefresh = timeElapsed >= REFRESH_INTERVAL;
-
-
-                if (inRefreshWindow && shouldRefresh) {
-                    console.log(`✅ ${now.toLocaleTimeString()} - 在刷新时段内且超过 ${REFRESH_INTERVAL/1000/60} 分钟，自动刷新...`);
-                    showRefreshStatus('正在自动刷新页面...');
-                    
-                    // 执行页面刷新
-                    location.reload(); 
-                    
-                    // 注意：location.reload() 后，下面的代码不会执行，
-                    // 新加载的页面会重新初始化 lastRefreshTime 并启动循环。
-                    
-                } else if (inRefreshWindow) {
-                     const timeRemaining = REFRESH_INTERVAL - timeElapsed;
-                     const minutesRemaining = Math.ceil(timeRemaining / 60000);
-                     console.log(`🕒 ${now.toLocaleTimeString()} - 在刷新时段内，距下次刷新还剩约 ${minutesRemaining} 分钟。`);
-                     showRefreshStatus(`刷新时段内，距下次刷新还剩约 ${minutesRemaining} 分钟`);
-                } 
-                else {
-                    console.log(`⏸️ ${now.toLocaleTimeString()} - 非刷新时段，等待下次检查...`);
-                }
-            }
-            
-            // 设置一个每分钟运行一次的 setInterval 持续检查时间
-            // 这样无论用户在哪个时段打开页面，检查都会周期性地运行。
-            setInterval(checkTimeAndRefresh, BASE_CHECK_INTERVAL);
-            
-            console.log(`🔄 定时刷新检查已启动，每 ${BASE_CHECK_INTERVAL/1000/60} 分钟检查一次`);
-            
-            // 页面加载后立即执行一次检查
-            checkTimeAndRefresh(); 
+        function showRefreshStatus(msg, isError = false) {
+            els.refreshStatus.textContent = msg;
+            els.refreshStatus.style.display = 'block';
+            els.refreshStatus.style.background = isError ? 'rgba(229, 57, 53, 0.9)' : 'rgba(0, 0, 0, 0.7)';
+            setTimeout(() => els.refreshStatus.style.display = 'none', 3000);
         }
 
-        // 页面加载完成后调用主函数和语录加载函数
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchAndDisplayData(); 
-            setupQuoteUpdate(); // 启动语录定时更新
-            setupConditionalRefresh(); // 启动定时刷新检查 (修正后的版本)
-        });
+        // 页面加载时获取数据，后续由meta refresh控制
+        fetchData();
+        
+        // 初始加载
+        loadRandomQuote();
+        setInterval(loadRandomQuote, CONFIG.QUOTE_INTERVAL);
 
     </script>
 </body>
