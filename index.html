@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 防止标签页休眠：页面自动刷新 -->
+    <meta http-equiv="refresh" content="1200">
+    
+    <title>Munger</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="quotes.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f7f6; color: #333; }
+        h1 { color: #1e88e5; margin-bottom: 20px; }
+        
+
+        
+        /* 语录框样式 */
+        .quote-container { 
+            background-color: #fff9c4; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            padding: 15px 20px; 
+            margin: 0 auto 20px auto; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            max-width: 40%; 
+        }
+        .quote-text { font-size: 18px; font-style: italic; color: #856404; margin-bottom: 5px; line-height: 1.5; }
+        .quote-author { font-size: 14px; text-align: right; font-weight: bold; color: #b83838; }
+        
+        /* 表格样式优化 */
+        table.dataTable thead th {
+            background-color: #2196F3;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 2px solid #1976D2;
+            /* 【新增】字段间垂直分隔线 */
+            border-right: 2px solid rgba(255, 255, 255, 0.3); 
+        }
+        /* 【新增】移除最后一列的右侧边框，使外观更整洁 */
+        table.dataTable thead th:last-child {
+            border-right: none;
+        }
+        
+        table.dataTable tbody td {
+            vertical-align: middle;
+        }
+        
+        /* 刷新状态提示样式 */
+        .refresh-status {
+            position: fixed; top: 10px; right: 10px;
+            background: rgba(0, 0, 0, 0.8); color: white;
+            padding: 8px 12px; border-radius: 4px; font-size: 12px;
+            z-index: 1000; display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* 动画效果 */
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* 买入建议行高亮 */
+        .buy-recommendation td {
+            background-color: #e8f5e8 !important;
+            color: #2e7d2e !important;
+        }
+        .buy-recommendation td span {
+            color: #2e7d2e !important;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="quote-container">
+        <div id="quote-text" class="quote-text">正在加载语录...</div>
+        <div id="quote-author" class="quote-author"></div>
+    </div>
+
+    <h1>📝 Munger 表格数据 (只读)</h1>
+    
+    <div id="refresh-status" class="refresh-status"></div>
+
+    <div id="data-container">
+        <table id="munger-table" class="display" style="width:100%">
+            </table>
+    </div>
+    
+    <br><br>
+    
+    <h1>📊 指数PE数据 (只读)</h1>
+    
+    <div id="pe-data-container">
+        <table id="pe-table" class="display" style="width:100%">
+            </table>
+    </div>
+    
+    <script>
+        // 公共配置
+        const COMMON_HIDDEN_FIELDS = ['id', 'created_at'];
+        
+        const CONFIG = {
+            SUPABASE_URL: 'https://qburustwmcjpnilofjsi.supabase.co',
+            SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFidXJ1c3R3bWNqcG5pbG9manNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTI4MjUsImV4cCI6MjA3OTM4ODgyNX0.mzJN1k0ogNnr9kpqtandH_OH9nHIIeNrde1uac4JEdc',
+            TABLE_NAME: 'Munger',
+            PE_TABLE_NAME: 'all_indexes_PE',
+            QUOTE_INTERVAL: 300000,    // 5分钟更新语录
+        };
+        
+        const client = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+        
+        const els = {
+            quoteText: document.getElementById('quote-text'),
+            quoteAuthor: document.getElementById('quote-author'),
+            refreshStatus: document.getElementById('refresh-status')
+        };
+        
+        let dataTableInstance = null;
+        let peDataTableInstance = null;
+        
+        // 缓存表格配置对象
+        let mungerTableConfig = null;
+        let peTableConfig = null;
+
+        // -----------------------------------------------------------------------
+        // 核心逻辑：获取数据 (SPA模式)
+        // -----------------------------------------------------------------------
+        async function fetchData() {
+            showRefreshStatus('正在同步最新数据...');
+            
+            try {
+                // 获取 Munger 数据
+                const { data: mungerData, error: mungerError } = await client
+                    .from(CONFIG.TABLE_NAME)
+                    .select('*')
+                    .order('ratio', { ascending: true });
+
+                if (mungerError) throw mungerError;
+
+                // 获取 PE 数据
+                const { data: peData, error: peError } = await client
+                    .from(CONFIG.PE_TABLE_NAME)
+                    .select('*')
+                    .order('平均收益率', { ascending: false });
+
+                if (peError) throw peError;
+
+                if ((!mungerData || mungerData.length === 0) && (!peData || peData.length === 0)) {
+                    showRefreshStatus('数据库为空', true);
+                    return;
+                }
+
+                updateTable(mungerData);
+                updatePETable(peData);
+                showRefreshStatus('数据已更新');
+                
+            } catch (e) {
+                console.error('Data Fetch Error:', e.message);
+                showRefreshStatus(`数据更新失败: ${e.message || '未知错误'}`, true);
+            }
+        }
+
+        // -----------------------------------------------------------------------
+        // 表格更新逻辑
+        // -----------------------------------------------------------------------
+        function updateTable(data) {
+            if (!dataTableInstance) {
+                // 创建并缓存配置
+                mungerTableConfig = {
+                    hiddenFields: [...COMMON_HIDDEN_FIELDS, 'frequency'],
+                    numFields: ['target_price', 'current_price'],
+                    percentFields: ['ratio'],
+                    timeFields: ['updated_at'],
+                    specialFields: []
+                };
+                
+                // 动态计算 ratio 列索引
+                const visibleColumns = Object.keys(data[0] || {}).filter(key => !mungerTableConfig.hiddenFields.includes(key));
+                mungerTableConfig.order = [[visibleColumns.indexOf('ratio'), 'asc']];
+                
+                dataTableInstance = initTable('munger-table', data, mungerTableConfig);
+            } else {
+                // 使用缓存的配置
+                const processedData = preprocessTableData(data, mungerTableConfig);
+                dataTableInstance.clear().rows.add(processedData).draw(false);
+            }
+        }
+
+        function updatePETable(data) {
+            if (!peDataTableInstance) {
+                // 创建并缓存配置
+                peTableConfig = {
+                    hiddenFields: [...COMMON_HIDDEN_FIELDS, '胜率_Numeric', '平均收益率_Numeric'],
+                    numFields: [],
+                    percentFields: ['当前指数百分位', '当前PE百分位', '平均指数点位百分位', '胜率', '平均收益率', '买入分位数'],
+                    timeFields: ['更新时间'],
+                    specialFields: []
+                };
+                
+                peDataTableInstance = initTable('pe-table', data, peTableConfig);
+            } else {
+                // 使用缓存的配置
+                const processedData = preprocessTableData(data, peTableConfig);
+                peDataTableInstance.clear().rows.add(processedData).draw(false);
+            }
+        }
+
+        function initTable(tableId, data, config) {
+            // 保存原始数据用于高亮判断
+            const originalData = [...data];
+            
+            // 使用统一的数据预处理函数
+            const processedData = preprocessTableData(data, config);
+            
+            // 生成列定义
+            const columns = Object.keys(processedData[0] || {})
+                .filter(key => !config.hiddenFields.includes(key))
+                .map(key => ({ data: key, title: key }));
+            
+            // 创建表格实例
+            const tableInstance = $(`#${tableId}`).DataTable({
+                language: { url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/zh.json' },
+                data: processedData,
+                columns: columns,
+                order: config.order,
+                searching: false,
+                paging: false,
+                info: true,
+                responsive: true,
+                createdRow: function(row, data, dataIndex) {
+                    $(row).addClass('fade-in');
+                    
+                    // 使用原始数据进行高亮判断
+                    const originalRow = originalData[dataIndex];
+                    
+                    if (tableId === 'pe-table' && originalRow.是否买入 === true) {
+                        // PE表：基于Python脚本的买入判断结果
+                        $(row).addClass('buy-recommendation');
+                    } else if (tableId === 'munger-table' && originalRow.ratio <= 0.10) {
+                        // Munger表：ratio <= 10% (原始数据是小数形式)
+                        $(row).addClass('buy-recommendation');
+                    }
+                }
+            });
+            
+            return tableInstance;
+        }
+
+
+        // -----------------------------------------------------------------------
+        // 工具函数
+        // -----------------------------------------------------------------------
+        
+        // 统一百分比格式化函数
+        function formatPercent(value) {
+            const val = parseFloat(value);
+            if (!isNaN(val) && isFinite(val)) {
+                return  (val * 100).toFixed(2) + '%';
+            }
+            return value;
+        }
+        
+        // 时间格式化函数
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return dateTimeStr;
+            return dateTimeStr.replace('T', ' ').replace('+00:00', '').replace(/\.\d+/, '').replace(' 00:00:00','');
+        }
+        
+
+        
+        // 数据预处理函数
+        function preprocessTableData(data, config) {
+            return data.map(row => {
+                const processedRow = { ...row };
+                
+                // 数字格式化
+                if (config.numFields) {
+                    config.numFields.forEach(field => {
+                        if (processedRow[field] !== null && processedRow[field] !== undefined) {
+                            processedRow[field] = parseFloat(processedRow[field]).toFixed(2);
+                        }
+                    });
+                }
+                
+                // 百分比格式化（使用统一函数）
+                if (config.percentFields) {
+                    config.percentFields.forEach(field => {
+                        if (processedRow[field] !== null && processedRow[field] !== undefined) {
+                            processedRow[field] = formatPercent(processedRow[field]);
+                        }
+                    });
+                }
+                
+
+                
+                // 时间格式化（使用统一函数）
+                if (config.timeFields) {
+                    config.timeFields.forEach(field => {
+                        if (processedRow[field]) {
+                            processedRow[field] = formatDateTime(processedRow[field]);
+                        }
+                    });
+                }
+                
+                return processedRow;
+            });
+        }
+
+        // -----------------------------------------------------------------------
+        // 辅助函数
+        // -----------------------------------------------------------------------
+        
+        function loadRandomQuote() {
+            if (!window.quotesData || !Array.isArray(window.quotesData)) {
+                els.quoteText.textContent = 'Data Not Found';
+                return;
+            }
+            const item = window.quotesData[Math.floor(Math.random() * window.quotesData.length)];
+            els.quoteText.textContent = item.quote;
+            els.quoteAuthor.textContent = item.author ? `- ${item.author}` : '';
+        }
+
+        function showRefreshStatus(msg, isError = false) {
+            els.refreshStatus.textContent = msg;
+            els.refreshStatus.style.display = 'block';
+            els.refreshStatus.style.background = isError ? 'rgba(229, 57, 53, 0.9)' : 'rgba(0, 0, 0, 0.7)';
+            setTimeout(() => els.refreshStatus.style.display = 'none', 3000);
+        }
+
+        // 页面加载时获取数据，后续由meta refresh控制
+        fetchData();
+        
+        // 初始加载
+        loadRandomQuote();
+        setInterval(loadRandomQuote, CONFIG.QUOTE_INTERVAL);
+
+    </script>
+</body>
+</html>
